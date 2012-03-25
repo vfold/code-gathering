@@ -1,0 +1,10 @@
+[{
+	"caption": "Compiler-JS: Run",
+	"command": "compilerjs_run"
+}, {
+	"caption": "Compiler-JS: Debug",
+	"command": "compilerjs_debug"
+}, {
+	"caption": "Compiler-JS: Settings",
+	"command": "compilerjs_settings"
+}]

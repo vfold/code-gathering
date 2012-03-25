@@ -1,0 +1,22 @@
+{
+	/********************************************************
+	 * If you have an open folder, it will search for the 
+	 * [main].js file and compile your project
+	 ********************************************************/
+	 "main": "main",
+	/********************************************************
+	 * Before compiling, it will save your files
+	 * TODO: Loop through all project files and save 
+	 ********************************************************/
+	"save_first": true,
+	/********************************************************
+	 * TODO: Add this feature
+	 * Perform a syntax check using JSHint before compilation
+	 ********************************************************/
+	"syntax_check": false,
+	/********************************************************
+	 * If default command does not run, change it to the full
+	 * path location of the executable file: "compiler-js"
+	 ********************************************************/
+	"command": "compiler-js"
+}

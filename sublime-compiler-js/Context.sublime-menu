@@ -1,0 +1,13 @@
+[{
+  "id": "compilerjsmenu",
+  "caption": "Compiler-JS",
+"children": [{
+  "id": "compilerjsrun",
+  "caption": "Run",
+  "command": "compilerjs_run"
+}, {
+  "id": "compilerjsdebug",
+  "caption": "Debug",
+  "command": "compilerjs_debug"
+}]
+}]

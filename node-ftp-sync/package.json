@@ -1,0 +1,35 @@
+{
+  "name": "ftp-sync",
+  "version": "2012.3.8",
+  "description": "Synchronise files with a specified remote and local target",
+  "homepage": "http://github.com/jshint/node-jshint",
+  "author": {
+    "name": "Raphael Varonos",
+    "email": "r.varonos@gmail.com",
+    "url": "http://github.com/rvaronos"
+  },
+  "licenses": [
+    {
+      "type": "Open Software License version 3.0",
+      "url": "http://www.opensource.org/licenses/osl-3.0.php"
+    }
+  ],
+  "main": "./ftp-sync",
+  "files": [
+    "packages/jshint/README.markdown",
+    "packages/jshint/jshint.js",
+    "README.md",
+    "LICENSE",
+    "HELP",
+    "bin/hint",
+    "lib"
+  ],
+  "dependencies": {
+    "ftp": ">=0.1.1"
+  },
+  "preferGlobal": true,
+  "optionalDependencies": {},
+  "engines": { "node" : ">=0.4.0" },
+  "repository" : { "type": "git", "url": "http://github.com/rvaronos/node-ftp-sync.git" },
+  "keywords": [ "ftp", "client", "transfer","sync","synchronise"],
+}

@@ -1,0 +1,35 @@
+[{
+  "caption": "Tools",
+  "mnemonic": "t",
+  "id": "tools",
+  "children": [{
+    "id": "compilerjsmenu",
+    "caption": "Compiler-JS",
+    "children": [{
+
+      "id": "compilerjsrun",
+      "caption": "Run",
+      "command": "compilerjs_run"
+    }, {
+      "id": "compilerjsdebug",
+      "caption": "Debug",
+      "command": "compilerjs_debug"
+    }]
+  }]
+}, {
+  "caption": "Preferences",
+  "mnemonic": "n",
+  "id": "preferences",
+  "children": [{
+    "caption": "Package Settings",
+    "mnemonic": "P",
+    "id": "package-settings",
+    "children": [{
+      "caption": "Compiler-JS",
+      "command": "open_file",
+      "args": {
+        "file": "${packages}/Compiler-JS/Compiler-JS.sublime-settings"
+      }
+    }]
+  }]
+}]

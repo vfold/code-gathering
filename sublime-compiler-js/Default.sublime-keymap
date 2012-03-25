@@ -1,0 +1,7 @@
+[{
+	"keys": ["ctrl+f10"],
+	"command": "compilerjs_run"
+}, {
+	"keys": ["ctrl+shift+f10"],
+	"command": "compilerjs_debug"
+}]

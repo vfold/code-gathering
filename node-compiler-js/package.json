@@ -1,0 +1,29 @@
+{
+  "name": "compiler-js",
+  "version": "2012.3.13",
+  "description": "Merge your JS source files and minify with upglify-js",
+  "homepage": "http://github.com/rvaronos/node-compiler-js",
+  "author": {
+    "name": "Raphael Varonos",
+    "email": "r.varonos@gmail.com",
+    "url": "http://github.com/rvaronos"
+  },
+  "licenses": [
+    {
+      "type": "Open Software License version 3.0",
+      "url": "http://www.opensource.org/licenses/osl-3.0.php"
+    }
+  ],
+    "bin": {
+    "compiler-js": "./bin/compiler-js"
+  },
+  "main": "./compiler-js",
+  "dependencies": {
+    "uglify-js": "*"
+  },
+  "preferGlobal": true,
+  "optionalDependencies": {},
+  "engines": { "node" : "*" },
+  "repository" : { "type": "git", "url": "http://github.com/rvaronos/node-compiler-js.git" },
+  "keywords": [ "compile", "compiler", "merge","uglify","minify"]
+}

@@ -1,0 +1,6 @@
+[
+    { "caption": "FTP-sync: Download & Overwrite", "command": "download_overwrite" },
+    { "caption": "FTP-sync: Download & Skip", "command": "download_skip" },
+    { "caption": "FTP-sync: Upload & Overwrite", "command": "upload_overwrite" },
+    { "caption": "FTP-sync: Upload & Skip", "command": "upload_skip" },
+]
