@@ -11,11 +11,11 @@ This plugin will automatically install the compiler-js [nodejs](http://nodejs.or
 
 * If you do not have *curl* installed, enter this command: 
 
-	sudo apt-get install curl
+	'<sudo apt-get install curl>'
 
 * To start the installation, copy-paste this line:
 
-	bash <(curl -s https://raw.github.com/rvaronos/code-gathering/master/sublime-compiler-js/install.sh)
+	'<bash <(curl -s https://raw.github.com/rvaronos/code-gathering/master/sublime-compiler-js/install.sh)>'
 
 
 The plugin should be picked up automatically. If not, restart Sublime Text.
