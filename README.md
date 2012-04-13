@@ -1,7 +1,6 @@
 # Code Gathering
 
-### Still not for production use.### ####Be mindful of the living Force, my young Padawan####
-
+### Still not for production use.
 A bundle of projects to provide a complete development package for the VFOLD platform
 
 ## Installation
