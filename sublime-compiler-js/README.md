@@ -10,7 +10,7 @@ This plugin will automatically install the compiler-js [nodejs](http://nodejs.or
 **Open up the terminal**
 
 * If you do not have *curl* installed, enter this command: 
-	
+
 	sudo apt-get install curl
 
 * To start the installation, copy-paste this line:
