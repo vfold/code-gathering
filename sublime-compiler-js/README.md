@@ -5,14 +5,22 @@ into one output file in the ./output directory.
 
 ## Installation
 
-This plugin works only with the compiler-js [nodejs](http://nodejs.org/) module. The Installation will be done automatically by running this command:
+This plugin works only with the compiler-js [nodejs](http://nodejs.org/) module. The Installation will be done automatically.
 
+**Open up the terminal**
+
+** If you do not have *curl* installed, enter this command: 
+	
+	sudo apt-get install curl
+
+* To start the installation, copy-paste this line:
+
+	bash <(curl -s https://raw.github.com/rvaronos/code-gathering/master/sublime-compiler-js/install.sh)
 
 
 The plugin should be picked up automatically. If not, restart Sublime Text.
 
 ## Usage
-
 
 The following commands are available in the Command Palette:
 
