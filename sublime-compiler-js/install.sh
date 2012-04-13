@@ -1,14 +1,11 @@
  #!/bin/bash
 
+sudo apt-get install git npm node
+sudo npm install -g compiler-js
+
 ##########################################
 # Fetch plugin from github
 ##########################################
-
-if 
-	dpkg-query -W git
-then 
-	sudo apt-get install git
-fi
 
 cd ~/"/.cache/"
 if [ -d "code-gathering" ]
@@ -32,4 +29,6 @@ fi
 
 cp -r ~/"/.cache/code-gathering/sublime-compiler-js" ./
 mv sublime-compiler-js Compiler-JS
+
+echo "-------------------------------\nInstallation complete\n-------------------------------"
 
