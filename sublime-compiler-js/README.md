@@ -5,11 +5,11 @@ into one output file in the ./output directory.
 
 ## Installation
 
-This plugin works only with the compiler-js [nodejs](http://nodejs.org/) module. The Installation will be done automatically.
+This plugin will automatically install the compiler-js [nodejs](http://nodejs.org/) module.
 
 **Open up the terminal**
 
-** If you do not have *curl* installed, enter this command: 
+* If you do not have *curl* installed, enter this command: 
 	
 	sudo apt-get install curl
 
