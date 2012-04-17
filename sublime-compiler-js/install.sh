@@ -1,6 +1,6 @@
  #!/bin/bash
 
-sudo apt-get install git npm node
+sudo apt-get install git npm nodejs
 sudo npm install -g compiler-js
 
 ##########################################
