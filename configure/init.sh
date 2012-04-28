@@ -1,17 +1,9 @@
 #!/bin/bash 
 
-if [ $USER != root ]
-then
-echo "You must run this script with sudo"
-return
-fi
-
 cache=https://raw.github.com/rvaronos/code-gathering/master/configure/
-conf=/root/.gconf/apps/gnome-terminal/
+conf=~/.gconf/apps/gnome-terminal/
 search=Profile
 max=-1
-# Install configurations for the given username
-user=$1
 
 indexOf(){
 return | awk -v a="$1" -v b="$2" 'BEGIN{print index(a,b)}'
@@ -25,8 +17,6 @@ return | awk -v s="$1" -v a="$2" -v b="$3" 'BEGIN{print substr(s,a,b)}'
 replace(){
 return | awk -v  -v regex="$2" replacement="$3" target="$3" 'BEGIN{print sub(regex,replacement,target)}'
 }
-
-
 
 cd $conf
 mkdir -p profiles
@@ -90,5 +80,6 @@ gconftool-2 --load profile.xml
 
 gconftool-2 --spawn
 
-#gnome-terminal --window-with-profile=CodeGathering -e "sh script.sh $USER"
+gnome-terminal --window-with-profile=CodeGathering -e "sh script.sh $USER"
+exit
 
