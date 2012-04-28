@@ -3,7 +3,12 @@
 	 * If you have an open folder, it will search for the 
 	 * [main].js file and compile your project
 	 ********************************************************/
-	 "main": "main",
+	 "preinit": "pre-init",
+	/********************************************************
+	 * If you have an open folder, it will search for the 
+	 * [main].js file and compile your project
+	 ********************************************************/
+	 "init": "init",
 	/********************************************************
 	 * Before compiling, it will save your files
 	 * TODO: Loop through all project files and save 

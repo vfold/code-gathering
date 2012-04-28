@@ -37,7 +37,9 @@
  }
 
  setupGithub() {
- 	cd ~/.ssh 
+ 	cd ~/
+mkdir -p .ssh
+cd .ssh 
 
  	if [ ! -d "key_backup" ]
  		then
@@ -45,9 +47,9 @@
     mkdir key_backup 
 fi
 
-     	# Copies the id_rsa and id_rsa.pub files into key_backup
+     	# Copies the id_rsa and id_rsa.pub files into key_back
      	cp id_rsa* key_backup
-     	rm id_rsa*
+     	rm id_rsa
 
      	readInput "Enter your email, followed by [ENTER]" 
      	email=$reply
@@ -98,12 +100,8 @@ fi
  google-chrome "https://github.com/settings/admin"
  pause;
 
- readInput "Paste API token [CONTROL+SHIFT+V], followed by [ENTER]";
- token=$reply;
-
  git config--global github.user $username
- git config--global github.token $token
 
- info "*Note* If you ever change your GitHub password, a new token will be created and will need to be updated..."
+ info "Have fun with github!"
  pause;
 }

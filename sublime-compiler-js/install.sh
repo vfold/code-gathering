@@ -30,5 +30,7 @@ fi
 cp -r ~/"/.cache/code-gathering/sublime-compiler-js" ./
 mv sublime-compiler-js Compiler-JS
 
-echo "-------------------------------\nInstallation complete\n-------------------------------"
+echo "-------------------------------"
+echo "Installation complete"
+echo "-------------------------------"
 

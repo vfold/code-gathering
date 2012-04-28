@@ -1,0 +1,28 @@
+info it worked if it ends with ok
+verbose cli [ 'node', '/usr/bin/npm', 'adduser' ]
+info using npm@1.1.16
+info using node@v0.6.15
+verbose /usr/bin/node node symlink
+verbose config file /home/gatherer/.npmrc
+verbose config file /usr/etc/npmrc
+verbose config file /usr/lib/nodejs/npm/npmrc
+ERR! Error: Please use a real email address.
+ERR!     at Object.adduser (/usr/lib/nodejs/npm/lib/utils/npm-registry-client/adduser.js:28:15)
+ERR!     at /usr/lib/nodejs/npm/lib/adduser.js:40:16
+ERR!     at go (/usr/lib/nodejs/npm/lib/utils/promise-chain.js:20:19)
+ERR!     at /usr/lib/nodejs/npm/lib/utils/promise-chain.js:33:13
+ERR!     at ReadStream.D (/usr/lib/nodejs/npm/node_modules/read/lib/read.js:110:7)
+ERR!     at ReadStream.emit (events.js:67:17)
+ERR!     at TTY.onread (net.js:367:14)
+ERR! You may report this log at:
+ERR!     <http://github.com/isaacs/npm/issues>
+ERR! or email it to:
+ERR!     <npm-@googlegroups.com>
+ERR! 
+ERR! System Linux 3.0.0-12-generic
+ERR! command "node" "/usr/bin/npm" "adduser"
+ERR! cwd /media/72D3163D7F7CE91D/Development/github repos/code-gathering/node-compiler-js
+ERR! node -v v0.6.15
+ERR! npm -v 1.1.16
+ERR! message Please use a real email address.
+verbose exit [ 1, true ]

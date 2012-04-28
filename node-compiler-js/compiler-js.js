@@ -1,40 +1,46 @@
 var pathUglify = "uglify-js",
-    /*****************************
-     * File System
-     *****************************/
-    fs = require("fs"),
-    jsp = require(pathUglify).parser,
-    pro = require(pathUglify).uglify,
-    path, files, stats, countFile = 0,
-    countShaderFiles = 0,
-    outputDir, classMainName,
-    /********************************************
-     * javascript Code
-     * Original Merged -> Abstract Syntax Tree
-     ********************************************/
-    code = "",
-    codeShader = commentBlock("WebGL Shaders") + '\n var shader={"fragment":{},"vertex":{}};';
+  /*****************************
+   * File System
+   *****************************/
+  fs = require("fs"),
+  jsp = require(pathUglify).parser,
+  pro = require(pathUglify).uglify,
+  path, files, stats, countFile = 0,
+  countShaderFiles = 0,
+  outputDir, classMainName,
+  /********************************************
+   * javascript Code
+   * Original Merged -> Abstract Syntax Tree
+   ********************************************/
+  code = "",
+  codeShader = commentBlock("WebGL Shaders") + '\n var shader={"fragment":{},"vertex":{}};';
 
 module.exports = {
 
   init: function(args) {
-    /*********************************
-     * Add Main class at end
+        /*********************************
+     * Add Init class at end
      **********************************/
-    classMain = args[2] || "main.js";
+    classInit = args[2] || "init.js";
+    /*********************************
+     * Add Pre Init class at beginning
+     **********************************/
+    classPreInit = args[3] || "pre-init.js";
     /*********************************
      * Enable debug mode
      **********************************/
-    debug = args[3] == "debug";
+    debug = args[4] || "debug";
     /*********************************
      * read all files from src folder
      * specified in given arguments
      **********************************/
-    pathSource = args[4] || "src";
+    pathSource = args[5] || "src";
     /*********************************
      * Output path for compiled data
      **********************************/
-    pathOutput = args[5] || "output";
+    pathOutput = args[6] || "output";
+
+
     /****************************************
      * Loop through the source folder and
      * obtain the js files for compilation
@@ -49,71 +55,82 @@ module.exports = {
       console.log("Could not find source folder: \"" + pathSource + "\"\nCurrent working directory: \"" + process.cwd() + "\"");
       return;
     }
-    new readDir(pathSource, function() {
-      /********************************************
-       * Append .js file to the output code
-       ********************************************/
-      var i = classMain.lastIndexOf(".");
-      if (i != -1) {
-        if (classMain.substr(i) != ".js") {
-          console.log('Wrong extension for main file: "' + classMain + '"');
-          return;
-        }
-        classMainName = getUntilLast(classMain, ".");
-      } else {
-        classMainName = classMain;
-        classMain+=".js";
-      }
 
-      try {
-        fs.lstatSync(classMain);
-      } catch (e) {
-        console.log('Invalid Main JS File: "' + classMain + '"');
-        return;
-      }
+    addFile(path = checkFile(classPreInit)+".js", function() {
 
-      addFile(path = classMain, function() {
+      new readDir(pathSource, function() {
+
+        classMainName = checkFile(classInit);
+
+        addFile(path = classMainName+".js", function() {
 
 
-        if (countShaderFiles > 0) code += codeShader;
+          if (countShaderFiles > 0) code += codeShader;
 
-        if (!debug) {
+          if (!debug) {
+
+            /********************************************
+             * 1. Parse code and get the initial AST
+             * 2. Get a new AST with mangled names
+             * 3. Get an AST with compression optimizations
+             ********************************************/
+
+            code = pro.gen_code(
+            pro.ast_squeeze(
+            pro.ast_mangle(
+            jsp.parse(code))));
+          }
 
           /********************************************
-           * 1. Parse code and get the initial AST
-           * 2. Get a new AST with mangled names
-           * 3. Get an AST with compression optimizations
+           * Output path for compiled build
            ********************************************/
 
-          code = pro.gen_code(
-          pro.ast_squeeze(
-          pro.ast_mangle(
-          jsp.parse(code))));
-        }
+          if (pathOutput.indexOf(".js") == -1) {
+            outputDir = pathOutput;
+            pathOutput += "/" + classMainName + (debug ? "-debug" : "") + ".js";
 
-        /********************************************
-         * Output path for compiled build
-         ********************************************/
-
-        if (pathOutput.indexOf(".js") == -1) {
-          outputDir = pathOutput;
-          pathOutput += "/" + classMainName + (debug ? "-debug" : "") + ".js";
-
-        } else {
-          outputDir = getUntilLast(pathOutput, "/");
-        }
-        console.log("Main:   "+classMain+"\nOutput: "+pathOutput);
-        try {
-          fs.lstatSync(outputDir);
-        } catch (e) {
-          fs.mkdirSync(outputDir);
-        }
-        fs.writeFileSync(pathOutput, code);
-        console.log("----------------------------------- \n" + "Compiled Files: " + countFile + "\nShader Files: " + countShaderFiles + "\nOutput size: " + parseInt(fs.lstatSync(pathOutput).size / 1024, 10) + "KB \n" + "-----------------------------------");
+          } else {
+            outputDir = getUntilLast(pathOutput, "/");
+          }
+          console.log("Main:   " + classInit + "\nOutput: " + pathOutput);
+          try {
+            fs.lstatSync(outputDir);
+          } catch (e) {
+            fs.mkdirSync(outputDir);
+          }
+          fs.writeFileSync(pathOutput, code);
+          console.log("----------------------------------- \n" + "Compiled Files: " + countFile + "\nShader Files: " + countShaderFiles + "\nOutput size: " + parseInt(fs.lstatSync(pathOutput).size / 1024, 10) + "KB \n" + "-----------------------------------");
+        });
       });
     });
   }
 };
+
+function checkFile(filename) {
+
+  /********************************************
+   * Append .js file to the output code
+   ********************************************/
+
+  var name, i = filename.lastIndexOf(".");
+  if (i != -1) {
+    if (filename.substr(i) != ".js") {
+      throw 'Wrong extension for main file: "' + filename + '"';
+    }
+    return getUntilLast(filename, ".");
+  } else {
+    return filename;
+  }
+
+  try {
+    fs.lstatSync(filename);
+  } catch (e) {
+    throw 'Invalid Main JS File: "' + filename + '"';
+  }
+
+  return name;
+
+}
 
 function readDir(dir, callback) {
 
@@ -157,8 +174,7 @@ function addFile(filename, callback) {
       callback();
     });
 
-  }
-  else{
+  } else {
     callback();
   }
 }
@@ -188,9 +204,9 @@ function getUntilLast(string, character) {
 function minifyShader(path, callbackShader) {
 
   var fs = require('fs'),
-      code = "",
-      callbackLine = checkLine,
-      line;
+    code = "",
+    callbackLine = checkLine,
+    line;
 
   readLines(fs.createReadStream(path));
 
@@ -262,8 +278,8 @@ function AsyncLoop(loopArray, callbackFunction) {
 
   var
   array = loopArray,
-      callback = callbackFunction,
-      action, count = 0;
+    callback = callbackFunction,
+    action, count = 0;
 
   this.start = function(actionFunction) {
     count = -1;

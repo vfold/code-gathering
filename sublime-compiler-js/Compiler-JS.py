@@ -20,9 +20,13 @@ class CompilerjsCommand(sublime_plugin.TextCommand):
     self.settings = "Compiler-JS.sublime-settings"
     self.window = self.view.window() or sublime.active_window()
 
-    self.mainFile = sublime.load_settings(self.settings).get("main")
-    if(not self.mainFile):
-      self.mainFile = os.path.basename(self.view.file_name())
+    self.initFile = sublime.load_settings(self.settings).get("init")
+    if(not self.initFile):
+      self.initFile = os.path.basename(self.view.file_name())
+
+    self.preInitFile = sublime.load_settings(self.settings).get("preinit")
+    if(not self.preInitFile):
+      self.preInitFile = ""
 
     if(len(self.window.folders())>0):
       self.working_dir = self.window.folders()[0]
@@ -91,7 +95,7 @@ class CompilerjsCommand(sublime_plugin.TextCommand):
 class CompilerjsRunCommand(CompilerjsCommand):
   def run(self, edit):
     
-    command = ['compiler-js',self.mainFile]
+    command = ['compiler-js',self.initFile,self.preInitFile]
     self.run_command(command, self.command_done)
 
   def command_done(self, result):
@@ -99,7 +103,7 @@ class CompilerjsRunCommand(CompilerjsCommand):
 
 class CompilerjsDebugCommand(CompilerjsCommand):
   def run(self, edit):
-    command = ['compiler-js',self.mainFile,"debug"]
+    command = ['compiler-js',self.initFile,self.preInitFile,"debug"]
     self.run_command(command, self.command_done)
 
   def command_done(self, result):

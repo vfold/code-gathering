@@ -1,6 +1,6 @@
 {
   "name": "compiler-js",
-  "version": "2012.3.13",
+  "version": "2012.4.27",
   "description": "Merge your JS source files and minify with upglify-js",
   "homepage": "http://github.com/rvaronos/node-compiler-js",
   "author": {
