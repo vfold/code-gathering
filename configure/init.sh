@@ -10,8 +10,8 @@ cache=https://raw.github.com/rvaronos/code-gathering/master/configure/
 conf=/root/.gconf/apps/gnome-terminal/
 search=Profile
 max=0
-user=$USER
-home=$HOME
+# Install configurations for the given username
+user=$1
 
 indexOf(){
 return | awk -v a="$1" -v b="$2" 'BEGIN{print index(a,b)}'
@@ -30,13 +30,13 @@ list=$(find profiles -type d -name $search* )
 for i in $list
 do
 
-cd $i
+cd ${conf}$i
 index=$(substr $i $(($(indexOf $i $search)+${#search})))
 
 if [ $(grep "CodeGathering" %gconf.xml) ]
 then
 echo "CodeGathering Profile already exists"
-#return
+return
 fi
 
 if [ $index > $max ] 
@@ -46,20 +46,31 @@ fi
 
 done;
 
+index=$(( $max + 1 ))
+
 cd ${conf}global
 
+# Check for an existing configuration file
 if [ ! -f %gconf.xml ]
 then
-echo create
+wget -N ${cache}global.xml
+mv global.xml %gconf.xml
 fi
-line="<li type=\"string\">\n<stringvalue>Profile${max+1}</stringvalue>\n</li>"
-sed "34i ${line}" %gconf.xml > newfile
+
+line="\n<li type=\"string\">\n<stringvalue>Profile${index}</stringvalue>\n</li>"
+lineNum=$(grep -n '<entry name="profile_list"' %gconf.xml | awk -F: '{print $1}')
+ 
+sed "$lineNum a\
+> ${line}" %gconf.xml > newfile
+mv newfile %gconf.xml
+
 
 cd ~/.cache
 mkdir -p code-gathering
 cd code-gathering
 wget -N ${cache}packages ${cache}script.sh ${cache}profile.xml
 
-cp profile.xml ${profile}%gconf.xml
-gnome-terminal --window-with-profile=CodeGathering -e "sh script.sh $USER"
+sed -i 's/\${ID}/${index}/g' profile.xml
+#gconftool-2 --load profile.xml
+#gnome-terminal --window-with-id=${index} -e "sh script.sh $USER"
 

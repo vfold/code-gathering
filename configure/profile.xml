@@ -1,75 +1,220 @@
-<?xml version="1.0"?>
-<gconf>
-	<entry name="custom_command" mtime="1335525948" type="string">
-		<stringvalue></stringvalue>
-	</entry>
-	<entry name="use_custom_command" mtime="1335526037" type="bool" value="false"/>
-	<entry name="font" mtime="1335525948" type="string">
-		<stringvalue>Monospace 12</stringvalue>
-	</entry>
-	<entry name="scrollbar_position" mtime="1335525948" type="string">
-		<stringvalue>right</stringvalue>
-	</entry>
-	<entry name="use_system_font" mtime="1335526122" type="bool" value="true"/>
-	<entry name="word_chars" mtime="1335525948" type="string">
-		<stringvalue>-A-Za-z0-9,./?%&amp;#:_=+@~</stringvalue>
-	</entry>
-	<entry name="palette" mtime="1335525948" type="string">
-		<stringvalue>#2E2E34343636:#CCCC00000000:#4E4E9A9A0606:#C4C4A0A00000:#34346565A4A4:#757550507B7B:#060698209A9A:#D3D3D7D7CFCF:#555557575353:#EFEF29292929:#8A8AE2E23434:#FCFCE9E94F4F:#72729F9FCFCF:#ADAD7F7FA8A8:#3434E2E2E2E2:#EEEEEEEEECEC</stringvalue>
-	</entry>
-	<entry name="default_size_rows" mtime="1335525948" type="int" value="30"/>
-	<entry name="title" mtime="1335525971" type="string">
-		<stringvalue>Code Gathering</stringvalue>
-	</entry>
-	<entry name="use_theme_colors" mtime="1335525948" type="bool" value="false"/>
-	<entry name="cursor_blink_mode" mtime="1335525948" type="string">
-		<stringvalue>system</stringvalue>
-	</entry>
-	<entry name="exit_action" mtime="1335525993" type="string">
-		<stringvalue>hold</stringvalue>
-	</entry>
-	<entry name="scrollback_lines" mtime="1335526078" type="int" value="800"/>
-	<entry name="scrollback_unlimited" mtime="1335526084" type="bool" value="false"/>
-	<entry name="visible_name" mtime="1335525948" type="string">
-		<stringvalue>CodeGathering</stringvalue>
-	</entry>
-	<entry name="silent_bell" mtime="1335526125" type="bool" value="true"/>
-	<entry name="delete_binding" mtime="1335525948" type="string">
-		<stringvalue>escape-sequence</stringvalue>
-	</entry>
-	<entry name="scroll_on_keystroke" mtime="1335525948" type="bool" value="true"/>
-	<entry name="background_type" mtime="1335525948" type="string">
-		<stringvalue>transparent</stringvalue>
-	</entry>
-	<entry name="default_size_columns" mtime="1335525948" type="int" value="80"/>
-	<entry name="use_custom_default_size" mtime="1335525948" type="bool" value="true"/>
-	<entry name="default_show_menubar" mtime="1335526129" type="bool" value="false"/>
-	<entry name="foreground_color" mtime="1335525948" type="string">
-		<stringvalue>#D078D078D078</stringvalue>
-	</entry>
-	<entry name="background_color" mtime="1335525948" type="string">
-		<stringvalue>#1B931B931B93</stringvalue>
-	</entry>
-	<entry name="allow_bold" mtime="1335525948" type="bool" value="true"/>
-	<entry name="backspace_binding" mtime="1335525948" type="string">
-		<stringvalue>ascii-del</stringvalue>
-	</entry>
-	<entry name="title_mode" mtime="1335525948" type="string">
-		<stringvalue>replace</stringvalue>
-	</entry>
-	<entry name="bold_color" mtime="1335525948" type="string">
-		<stringvalue>#000000000000</stringvalue>
-	</entry>
-	<entry name="scroll_on_output" mtime="1335525948" type="bool" value="false"/>
-	<entry name="update_records" mtime="1335525948" type="bool" value="true"/>
-	<entry name="scroll_background" mtime="1335525948" type="bool" value="true"/>
-	<entry name="login_shell" mtime="1335525980" type="bool" value="false"/>
-	<entry name="bold_color_same_as_fg" mtime="1335525948" type="bool" value="true"/>
-	<entry name="background_darkness" mtime="1335526053" type="float" value="0.81132078170776367"/>
-	<entry name="cursor_shape" mtime="1335525948" type="string">
-		<stringvalue>ibeam</stringvalue>
-	</entry>
-	<entry name="background_image" mtime="1335525948" type="string">
-		<stringvalue></stringvalue>
-	</entry>
-</gconf>
+<gconfentryfile>
+  <entrylist base="/apps/gnome-terminal/profiles/Profile${ID}">
+    <entry>
+      <key>allow_bold</key>
+      <value>
+        <bool>true</bool>
+      </value>
+    </entry>
+    <entry>
+      <key>background_color</key>
+      <value>
+        <string>#1B931B931B93</string>
+      </value>
+    </entry>
+    <entry>
+      <key>background_darkness</key>
+      <value>
+        <float>0.77568099999999995</float>
+      </value>
+    </entry>
+    <entry>
+      <key>background_image</key>
+      <value>
+        <string></string>
+      </value>
+    </entry>
+    <entry>
+      <key>background_type</key>
+      <value>
+        <string>transparent</string>
+      </value>
+    </entry>
+    <entry>
+      <key>backspace_binding</key>
+      <value>
+        <string>ascii-del</string>
+      </value>
+    </entry>
+    <entry>
+      <key>bold_color</key>
+      <value>
+        <string>#000000000000</string>
+      </value>
+    </entry>
+    <entry>
+      <key>bold_color_same_as_fg</key>
+      <value>
+        <bool>true</bool>
+      </value>
+    </entry>
+    <entry>
+      <key>cursor_blink_mode</key>
+      <value>
+        <string>system</string>
+      </value>
+    </entry>
+    <entry>
+      <key>cursor_shape</key>
+      <value>
+        <string>ibeam</string>
+      </value>
+    </entry>
+    <entry>
+      <key>custom_command</key>
+      <value>
+        <string></string>
+      </value>
+    </entry>
+    <entry>
+      <key>default_show_menubar</key>
+      <value>
+        <bool>false</bool>
+      </value>
+    </entry>
+    <entry>
+      <key>default_size_columns</key>
+      <value>
+        <int>20</int>
+      </value>
+    </entry>
+    <entry>
+      <key>default_size_rows</key>
+      <value>
+        <int>40</int>
+      </value>
+    </entry>
+    <entry>
+      <key>delete_binding</key>
+      <value>
+        <string>escape-sequence</string>
+      </value>
+    </entry>
+    <entry>
+      <key>exit_action</key>
+      <value>
+        <string>close</string>
+      </value>
+    </entry>
+    <entry>
+      <key>font</key>
+      <value>
+        <string>Monospace 12</string>
+      </value>
+    </entry>
+    <entry>
+      <key>foreground_color</key>
+      <value>
+        <string>#D078D078D078</string>
+      </value>
+    </entry>
+    <entry>
+      <key>login_shell</key>
+      <value>
+        <bool>false</bool>
+      </value>
+    </entry>
+    <entry>
+      <key>palette</key>
+      <value>
+        <string>#2E2E34343636:#CCCC00000000:#4E4E9A9A0606:#C4C4A0A00000:#34346565A4A4:#757550507B7B:#060698209A9A:#D3D3D7D7CFCF:#555557575353:#EFEF29292929:#8A8AE2E23434:#FCFCE9E94F4F:#72729F9FCFCF:#ADAD7F7FA8A8:#3434E2E2E2E2:#EEEEEEEEECEC</string>
+      </value>
+    </entry>
+    <entry>
+      <key>scroll_background</key>
+      <value>
+        <bool>true</bool>
+      </value>
+    </entry>
+    <entry>
+      <key>scroll_on_keystroke</key>
+      <value>
+        <bool>true</bool>
+      </value>
+    </entry>
+    <entry>
+      <key>scroll_on_output</key>
+      <value>
+        <bool>false</bool>
+      </value>
+    </entry>
+    <entry>
+      <key>scrollback_lines</key>
+      <value>
+        <int>512</int>
+      </value>
+    </entry>
+    <entry>
+      <key>scrollback_unlimited</key>
+      <value>
+        <bool>false</bool>
+      </value>
+    </entry>
+    <entry>
+      <key>scrollbar_position</key>
+      <value>
+        <string>right</string>
+      </value>
+    </entry>
+    <entry>
+      <key>silent_bell</key>
+      <value>
+        <bool>false</bool>
+      </value>
+    </entry>
+    <entry>
+      <key>title</key>
+      <value>
+        <string>Code Gathering</string>
+      </value>
+    </entry>
+    <entry>
+      <key>title_mode</key>
+      <value>
+        <string>replace</string>
+      </value>
+    </entry>
+    <entry>
+      <key>update_records</key>
+      <value>
+        <bool>true</bool>
+      </value>
+    </entry>
+    <entry>
+      <key>use_custom_command</key>
+      <value>
+        <bool>false</bool>
+      </value>
+    </entry>
+    <entry>
+      <key>use_custom_default_size</key>
+      <value>
+        <bool>true</bool>
+      </value>
+    </entry>
+    <entry>
+      <key>use_system_font</key>
+      <value>
+        <bool>true</bool>
+      </value>
+    </entry>
+    <entry>
+      <key>use_theme_colors</key>
+      <value>
+        <bool>false</bool>
+      </value>
+    </entry>
+    <entry>
+      <key>visible_name</key>
+      <value>
+        <string>CodeGathering</string>
+      </value>
+    </entry>
+    <entry>
+      <key>word_chars</key>
+      <value>
+        <string>-A-Za-z0-9,./?%&amp;#:_=+@~</string>
+      </value>
+    </entry>
+  </entrylist>
+</gconfentryfile>
