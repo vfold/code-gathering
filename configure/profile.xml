@@ -75,13 +75,13 @@
     <entry>
       <key>default_size_columns</key>
       <value>
-        <int>20</int>
+        <int>50</int>
       </value>
     </entry>
     <entry>
       <key>default_size_rows</key>
       <value>
-        <int>40</int>
+        <int>30</int>
       </value>
     </entry>
     <entry>
