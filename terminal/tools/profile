@@ -1,0 +1,99 @@
+#!/bin/bash
+
+checkProfile(){
+
+name=$1
+gconf=https://raw.github.com/rvaronos/code-gathering/master/terminal/profiles/
+conf=~/.gconf/apps/gnome-terminal/
+search=Profile
+max=-1
+
+################################################################
+# Make sure directories are created
+################################################################
+
+cd $conf
+mkdir -p profiles
+mkdir -p global
+
+################################################################
+# Check for containing strings the profiles key directory
+################################################################
+
+for i in $(gconftool -R /apps/gnome-terminal/profiles | egrep "profiles/Profile|visible_name = ${name}")
+do
+
+################################################################
+# Get the profile ID from the string looped into
+################################################################
+
+id=$(substrl $i $(($(indexOf $i $search)+${#search})) 1)
+
+if [ $(indexOf $i $name)!=0 ]
+then
+max=$(( $id - 1 ))
+echo "Updating existing profile"
+break
+fi
+if [ $(indexOf $i "Profile")=0 ]
+then
+continue
+fi
+
+echo $id $i
+
+if [ $id > $max ] 
+then 
+max=$id
+fi
+
+done;
+
+id=$(( $max + 1 ))
+
+cd ${conf}global
+
+#############################################
+# Check for an existing configuration file
+#############################################
+
+if [ ! -f %gconf.xml ]
+then
+wget -N ${gconf}global.xml
+mv global.xml %gconf.xml
+fi
+
+search=Profile${id}
+list=$(gconftool-2 --get "/apps/gnome-terminal/global/profile_list")
+i=$(indexOf $list $search)
+
+if [ $i = 0 ]
+then
+	list=[${search},$( substr $list 2 ) 
+fi
+
+gconftool-2 -s /apps/gnome-terminal/global/profile_list -t list --list-type string $list
+
+################################################################
+# Download the profile from github and replace the ID token
+################################################################
+
+cd ~/.cache/code-gathering
+wget -N ${gconf}${name}.xml
+sed -i "s/\${ID}/${id}/g" ${name}.xml
+
+###############################################
+# Load the profile and restart gconf
+###############################################
+
+gconftool-2 --load ${name}.xml
+gconftool-2 --shutdown
+gconftool-2 --spawn
+
+}
+
+dumpProfile(){
+
+gconftool-2 --dump /apps/gnome-terminal/profiles/Profile${1} > ${2} 
+
+}

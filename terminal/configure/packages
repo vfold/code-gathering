@@ -1,0 +1,57 @@
+[key]
+
+https://dl-ssl.google.com/linux/linux_signing_key.pub
+
+[ppa]
+
+richarvey/nodejs
+webupd8team/sublime-text-2
+kazam-team/stable-series
+
+[list]
+
+google: "deb http://dl.google.com/linux/chrome/deb/ stable main"
+geogebra: "deb http://download.opensuse.org/repositories/home:heimdall78/xUbuntu_11.10/ /"
+
+[packages]
+
+-- User Interface
+
+gnome-panel
+docky
+nautilus-gksu
+compiz
+compizconfig-settings-manager
+
+-- Graphics
+
+mypaint
+inkscape
+gimp 
+
+-- Development
+
+nodejs 
+npm
+sublime-text-2-beta
+git-core 
+git-gui 
+git-doc 
+
+-- Internet
+
+google-chrome-stable
+firefox
+opera
+mysql-server
+phpmyadmin
+skype
+
+-- Sound and Video
+
+kazam 
+qjackctl
+
+-- Helper tools
+
+geogebra
