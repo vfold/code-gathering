@@ -79,19 +79,20 @@ gconftool-2 -s /apps/gnome-terminal/global/profile_list -t list --list-type stri
 #***************************************************************
 
 cd ~/.cache/code-gathering
-wget -q ${gconf}${name}.xml
-cp ${name}.xml temp.xml
-sed -i "s/\${ID}/${id}/g" temp.xml
+curl -# ${gconf}${name}.xml > ${name}.xml
+cp ${name}.xml temp-profile.xml
+sed -i "s/\${ID}/${id}/g" temp-profile.xml
 
 #***************************************************************
 # Load the profile and restart gconf
 #***************************************************************
 
-gconftool-2 --load temp.xml
+gconftool-2 --load temp-profile.xml
 gconftool-2 --shutdown
 gconftool-2 --spawn
 
-rm -f temp.xml
+rm -f temp-profile.xml
+
 }
 
 dumpProfile(){
