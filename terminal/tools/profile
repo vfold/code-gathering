@@ -3,7 +3,7 @@
 checkProfile(){
 
 name=$1
-gconf=https://raw.github.com/rvaronos/code-gathering/master/terminal/profiles/
+gconf=https://raw.github.com/rvaronos/code-gathering/master/terminal/gconf/
 conf=~/.gconf/apps/gnome-terminal/
 search=Profile
 max=-1
