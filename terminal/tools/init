@@ -23,11 +23,21 @@ getOption
 
 initProject(){
 
+OIFS=$IFS
+IFS="||"
+
 base=https://raw.github.com/rvaronos/code-gathering/master/terminal
 
 while read -r line; do
-    echo "... $line ..."
+
+for x in $line
+do
+    echo "$x"
+done
+
 done <<< "$(curl -# ${base}/projects)"
+
+IFS=$OIFS
 
 echo -n "Enter project's name: "
 read project
@@ -37,7 +47,6 @@ cd ~/.cache/
 mkdir -p code-gathering
 cd code-gathering
 
-get ${base}/${project} script
 get ${base}/tools string
 get ${base}/tools profile
 
@@ -45,7 +54,6 @@ get ${base}/tools profile
 # Start gnome terminal with the script specified running custom Profile
 #************************************************************************
 
-source string
 source profile
 
 checkProfile CodeGathering
