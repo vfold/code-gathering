@@ -81,3 +81,5 @@ fi
  info "*Note* If you ever change your GitHub password, a new token will be created and will need to be updated..."
  pause;
 }
+
+info Added github functions
