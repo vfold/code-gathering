@@ -1,0 +1,70 @@
+#!/bin/bash
+
+source <(wget -qO- https://raw.github.com/rvaronos/code-gathering/master/terminal/tools/constructor)
+
+config=https://raw.github.com/rvaronos/code-gathering/master/terminal/configure/
+
+loadTool string
+loadTool github
+
+setupGithub
+
+cd ~/.cache/code-gathering
+info Getting 
+wget -N ${config}packages
+
+ #*************************************************
+ # Installing packages
+ #*************************************************
+
+ while read line
+ do
+
+ 		if [ '$line' = *\[* ]
+ 		then
+ 	echo $line
+ fi
+
+ done < packages
+
+ ask "Do you have a github account [y/n]?"
+
+ if [ $reply ]
+ 	then
+ 	setupGithub;
+ else
+ 	read -n 1 -s;
+
+ 	sleep 3;
+ 	google -chrome "https://github.com/signup/free"
+ 	read -n 1 -s;
+ 	setupGithub;
+ fi
+
+#*************************************************
+ # Setup Code Gathering Projects
+ #*************************************************
+
+ setupProjects() {
+
+ 	cd ~
+ 	mkdir development
+ 	cd development
+ 	mkdir github
+ 	cd github
+
+ 	echo "Fork my project!"
+ 	sleep 2;
+ 	google-chrome "https://github.com/rvaronos/code-gathering"
+ 	pause;
+
+ 	git clone git@github.com:$username/code-gathering.git
+ 	cd code-gathering
+ 	git remote add upstream git://github.com/rvaronos/code-gathering.git
+ 	git fetch upstream
+ }
+ setupSublime() {
+
+ 	npm install -g compiler-js
+ 	cd ~/"Library/Application Support/Sublime Text 2/Packages/"
+ }
