@@ -97,5 +97,3 @@ dumpProfile(){
 gconftool-2 --dump /apps/gnome-terminal/profiles/Profile${1} > ${2} 
 
 }
-
-info Added gnome-terminal profile tool
