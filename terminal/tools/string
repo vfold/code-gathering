@@ -12,5 +12,3 @@ return | awk -v s="$1" -v a="$2" -v b="$3" 'BEGIN{print substr(s,a,b)}'
 replace(){
 return | awk -v  -v regex="$2" replacement="$3" target="$3" 'BEGIN{print sub(regex,replacement,target)}'
 }
-
-info Added string manipulation functions
