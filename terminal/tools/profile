@@ -79,7 +79,7 @@ gconftool-2 -s /apps/gnome-terminal/global/profile_list -t list --list-type stri
 #***************************************************************
 
 cd ~/.cache/code-gathering
-wget -qN ${gconf}${name}.xml
+wget -q ${gconf}${name}.xml
 cp ${name}.xml temp.xml
 sed -i "s/\${ID}/${id}/g" temp.xml
 
