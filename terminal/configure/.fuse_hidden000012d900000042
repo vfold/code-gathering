@@ -1,0 +1,26 @@
+#!/bin/bash
+
+base=https://raw.github.com/rvaronos/code-gathering/master/terminal
+project=$1
+
+# Get the cache folder ready
+mkdir -p ~/.cache/code-gathering
+
+cd ~/.cache/code-gathering
+wget -qN ${base}/${project}/script
+wget -qN ${base}/tools/string
+wget -qN ${base}/tools/profile
+
+#**********************************************************************
+# Start gnome terminal with the script specified running a 
+#**********************************************************************
+
+source string
+source profile
+
+checkProfile CodeGathering
+gnome-terminal --tab-with-profile=CodeGathering -e script
+
+
+
+
