@@ -1,0 +1,94 @@
+#!/bin/bash
+
+sep="----------------------"
+optionFunc=(initProject clearAllCache exitOptions getOption)
+iwd=${PWD}
+
+initOptions(){
+
+get(){
+if [ -f $2 ]
+then
+echo "${2} exists.. aborting"
+return
+fi
+curl -# ${1}/${2} > ${2}
+}
+
+clearAllCache(){
+rm ~/.cache/code-gathering/*
+echo "Cache cleared"
+getOption
+}
+
+initProject(){
+
+base=https://raw.github.com/rvaronos/code-gathering/master/terminal
+
+while read -r line; do
+    echo "... $line ..."
+done <<< "$(curl -# ${base}/projects)"
+
+echo -n "Enter project's name: "
+read project
+
+# Get the cache folder ready
+cd ~/.cache/
+mkdir -p code-gathering
+cd code-gathering
+
+get ${base}/${project} script
+get ${base}/tools string
+get ${base}/tools profile
+
+#************************************************************************
+# Start gnome terminal with the script specified running custom Profile
+#************************************************************************
+
+source string
+source profile
+
+checkProfile CodeGathering
+gnome-terminal --tab-with-profile=CodeGathering -e script
+
+}
+
+clear;
+
+addOptions(){
+local i=1
+for option in "$@"
+do
+echo "[${i}] ${option}"
+((i++))
+done
+}
+
+exitOptions(){
+echo "To start again, type: initOptions"
+}
+
+echo -e "${sep}\nChoose an option:\n${sep}"
+addOptions "Initialise Project" "Clear all cache" "Exit"
+echo ${sep}
+
+getOption(){
+read -s -n1 ans
+${optionFunc[$(( $ans - 1 ))]}
+}
+
+getOption
+
+}
+initOptions
+# Go back to initial working directory
+cd "${iwd}"
+
+
+
+
+
+
+
+
+
