@@ -26,6 +26,7 @@ base=https://raw.github.com/rvaronos/code-gathering/master/terminal
 projects=()
 
 read -r LINE_ARRAY <<< "$(curl -# ${base}/projects/list)"
+
 IFS=";" 
 
 for x in "${LINE_ARRAY[@]}"
@@ -36,13 +37,12 @@ local i=0
 read -ra STR_ARRAY <<< "$x"
 printf "\n[%1d] : %5s - %20s" ${i} ${STR_ARRAY[0]} ${STR_ARRAY[1]}
 projects[${i}]=${STR_ARRAY[0]}
-echo ${STR_ARRAY[0]}
 
 ((i++))
 
 done
 
-printf "\n"
+printf "\n\n"
 
 echo -n "Enter project's index: "
 read -s -n1 index
