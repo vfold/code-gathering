@@ -22,37 +22,39 @@ getOption
 
 initProject(){
 
-get ${base}/tools string
-source string
-
 base=https://raw.github.com/rvaronos/code-gathering/master/terminal
 projects=()
 
-while read -r line; do
+read -r LINE_ARRAY <<< "$(curl -# ${base}/projects/list)"
+IFS=";" 
+
+for x in "${LINE_ARRAY[@]}"
+do
 
 local i=0
 
-printf "\n[%1d] : %5s - %20s" ${i} ${line[0]} ${line[1]}
-projects[${i}]=$(substr $line 1)
+read -ra STR_ARRAY <<< "$x"
+printf "\n[%1d] : %5s - %20s" ${i} ${STR_ARRAY[0]} ${STR_ARRAY[1]}
+projects[${i}]=${STR_ARRAY[0]}
+echo ${STR_ARRAY[0]}
 
 ((i++))
 
-done <<< "$(curl -# ${base}/projects)"
+done
 
-printf "\n\n"
+printf "\n"
 
 echo -n "Enter project's index: "
 read -s -n1 index
-
-project=${projects[0]}
-echo $project
-return
+project=${projects[$index]}
+printf "\rSelected project: ${project}\n"
 
 # Get the cache folder ready
 cd ~/.cache/
 mkdir -p code-gathering
 cd code-gathering
 
+get ${base}/tools string
 get ${base}/tools profile
 
 #************************************************************************
@@ -60,8 +62,14 @@ get ${base}/tools profile
 #************************************************************************
 
 source profile
+source string
 
 checkProfile CodeGathering
+
+mkdir -p ${project}
+cd ${project}
+
+get ${base}/projects/configure script
 gnome-terminal --tab-with-profile=CodeGathering -e script
 
 }
