@@ -15,7 +15,7 @@ curl -# ${1}/${2} > ${2}
 }
 
 clearAllCache(){
-rm -rf ~/.cache/code-gathering/*
+rm ~/.cache/code-gathering/*
 echo "Cache cleared"
 getOption
 }
@@ -69,9 +69,9 @@ checkProfile CodeGathering
 mkdir -p ${project}
 cd ${project}
 
-cd ~/.cache/code-gathering
 get ${base}/projects/configure main
-gnome-terminal --tab-with-profile=CodeGathering --command="bash main ${project}"
+gnome-terminal --tab-with-profile=CodeGathering -e main
+
 }
 
 clear;

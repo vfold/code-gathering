@@ -1,17 +1,32 @@
 #!/bin/bash
 
-source <(wget -qO- https://raw.github.com/rvaronos/code-gathering/master/terminal/tools/constructor)
+projectName=$1
+projectPath=projects/${1}
+base="https://raw.github.com/rvaronos/code-gathering/master/terminal"
+
+include(){
+if [ -f $2 ]
+then
+echo "${2} exists.."
+else
+get ${1} ${2}
+fi
+source ${2}
+}
+get(){
+curl -# ${base}/${1}/${2} > ~/.cache/code-gathering/${projectName}/${2}
+{
+
+include tools constructor
+include tools string
+include tools github
 
 config=https://raw.github.com/rvaronos/code-gathering/master/terminal/configure/
 
-loadTool string
-loadTool github
-
 setupGithub
 
-cd ~/.cache/code-gathering
-info Getting 
-wget -N ${config}packages
+info "Getting packages to install"
+get ${projectPath} packages
 
  #*************************************************
  # Installing packages
