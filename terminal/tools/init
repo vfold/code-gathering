@@ -68,10 +68,8 @@ checkProfile CodeGathering
 
 mkdir -p ${project}
 cd ${project}
-
-cd ~/.cache/code-gathering
-get ${base}/projects/configure main
-gnome-terminal --tab-with-profile=CodeGathering --command="bash main ${project}"
+get ${base}/projects/${project} main
+gnome-terminal --tab-with-profile=CodeGathering --command="bash main"
 }
 
 clear;
