@@ -4,11 +4,16 @@ indexOf(){
 return | awk -v string="$1" -v search="$2" 'BEGIN{print index(string,search)}'
 }
 substr(){
-return | awk -v s="$1" -v a="$2" 'BEGIN{print substr(s,a)}'
+return | awk -v string="$1" -v indexStart="$2" 'BEGIN{print substr(string,indexStart)}'
 }
 substrl(){
 return | awk -v s="$1" -v a="$2" -v b="$3" 'BEGIN{print substr(s,a,b)}'
 }
 replace(){
-return | awk -v  -v regex="$2" replacement="$3" target="$3" 'BEGIN{print sub(regex,replacement,target)}'
+return | awk -v  -v regex="$1" replacement="$2" target="$3" 'BEGIN{print sub(regex,replacement,target)}'
+}
+between(){
+local indexStart=$(($(indexOf "$1" "$2")+1))
+local indexEnd=$(($(indexOf $(substr $1 $indexStart) $3 )-1))
+return | substrl "$1" $indexStart $indexEnd
 }
