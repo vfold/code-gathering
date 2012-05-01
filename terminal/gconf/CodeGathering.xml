@@ -93,7 +93,7 @@
     <entry>
       <key>exit_action</key>
       <value>
-        <string>close</string>
+        <string>hold</string>
       </value>
     </entry>
     <entry>
