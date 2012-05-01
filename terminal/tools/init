@@ -69,7 +69,9 @@ checkProfile CodeGathering
 mkdir -p ${project}
 cd ${project}
 get ${base}/projects/${project} main
-gnome-terminal --tab-with-profile=CodeGathering --command="bash main"
+get ${base}/tools constructor
+
+gnome-terminal --tab-with-profile=CodeGathering --command="bash main ${project}"
 }
 
 clear;
@@ -81,6 +83,7 @@ do
 echo "[${i}] ${option}"
 ((i++))
 done
+echo "[${i}] Exit"
 }
 
 exitOptions(){
@@ -88,7 +91,7 @@ echo "To start again, type: initOptions"
 }
 
 echo -e "${sep}\nChoose an option:\n${sep}"
-addOptions "Initialise Project" "Clear all cache" "Exit"
+addOptions "Initialise Project" "Clear all cache"
 echo ${sep}
 
 getOption(){

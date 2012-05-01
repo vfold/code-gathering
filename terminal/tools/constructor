@@ -1,5 +1,14 @@
  #!/bin/bash
 
+ #********************************************************
+ # The project constructor 
+ #********************************************************
+
+logEnabled=true
+projectName=$1
+projectURL=projects/${1}
+projectPath=$PWD
+
  ps1_old="$PS1"
  PS1="\$"
  user=$1
@@ -13,12 +22,12 @@
  white=7
  norm=9 
 
-tools=https://raw.github.com/rvaronos/code-gathering/master/terminal/tools/
+base="https://raw.github.com/rvaronos/code-gathering/master/terminal"
 
 
- #*************************************************
- # Helper Functions
- #*************************************************
+ #********************************************************
+ # Print instruction and read user's input
+ #********************************************************
 
  readInput(){
  	tput bold
@@ -28,6 +37,11 @@ tools=https://raw.github.com/rvaronos/code-gathering/master/terminal/tools/
  	tput sgr0
  	read reply
  }
+
+ #********************************************************
+ # Press any key to continue
+ #********************************************************
+
  pause(){
  	tput bold
  	tput setaf $magenta;
@@ -40,6 +54,11 @@ tools=https://raw.github.com/rvaronos/code-gathering/master/terminal/tools/
  	tput sgr0
  	tput setaf $norm;
  }
+
+ #********************************************************
+ # Press any key to continue
+ #********************************************************
+
  step(){
  	tput bold
  	tput setaf $yellow
@@ -47,6 +66,11 @@ tools=https://raw.github.com/rvaronos/code-gathering/master/terminal/tools/
  	tput sgr0
  	tput setaf $norm;
  }
+
+ #********************************************************
+ # Print information about something
+ #********************************************************
+
  info(){
  	tput bold
  	tput setaf $blue
@@ -54,58 +78,98 @@ tools=https://raw.github.com/rvaronos/code-gathering/master/terminal/tools/
  	tput sgr0
  	tput setaf $norm;
  }
+
+ #********************************************************
+ # Ask a question and wait for a [y/n] response
+ #********************************************************
+
  ask(){
+ 	tput bold
+ 	tput setaf $green;
  	echo -n "${1}"
  	read -s -n1 ans
- 	if [$ans = y -o $ans = Y]
+ 	tput setaf $norm;
+ 	tput sgr0
+ 	if [ $ans = y -o $ans = Y ]
  		then
+echo " oh yeah!"
  		reply=true
  		return
- 	elif [$ans = n -o $ans = N]
+ 	elif [ $ans = n -o $ans = N ]
  		then 
+echo " naaaah.."
  		reply=false
  		return
  	fi
  	ask $1
  }
 
-progressFilter ()
-{
-    local flag=false c count cr=$'\r' nl=$'\n'
-    while IFS='' read -d '' -rn 1 c
-    do
-        if $flag
-        then
-            printf '%c' "$c"
-        else
-            if [[ $c != $cr && $c != $nl ]]
-            then
-                count=0
-            else
-                ((count++))
-                if ((count > 1))
-                then
-                    flag=true
-                fi
-            fi
-        fi
-    done
+ #****************************************************
+ # Information not displayed on the terminal window
+ # will be added to the log file
+ #****************************************************
+
+if [ -f log ]
+then
+rm log
+fi
+
+log(){
+if $logEnabled
+then
+echo $1 >>log;
+fi
 }
 
-loadTool(){
- 	tput bold
- 	tput setaf $yellow
-	echo Loading $1 tool..
-	source <(wget -N -P ~/.cache/code-gathering  ${tools}${1} | progressFilter)
- 	tput sgr0
- 	tput setaf $norm;
+ #****************************************************
+ # Include scripts from an online repository
+ #****************************************************
+
+include(){
+if [ -f $2 ]
+then
+log "Using cached file: ${2}"
+else
+get ${1} ${2}
+fi
+source ${2}
+}
+
+get(){
+tput setaf $magenta
+curl -# ${base}/${1}/${2} > ~/.cache/code-gathering/${projectName}/${2}
+tput setaf $norm;
+}
+
+ #*************************************************
+ # Functions for multiple options selection
+ #*************************************************
+
+getOption(){
+read -s -n1 ans
+${optionFunc[$(( $ans - 1 ))]}
+}
+
+option(){
+optionFunc=(${@} getOption)
+getOption
+}
+
+printOptions(){
+local i=1
+for option in "$@"
+do
+echo "[${i}] ${option}"
+((i++))
+done
+echo "[${i}] Exit"
 }
 
  #*************************************************
  # Startup Information and settings
  #*************************************************
 
- info "When you see [continue], press any key after you have followed instructions"
+info "When you see [continue], press any key after you have followed instructions"
  step "Try it now to start the configuration :)"
  pause;
 

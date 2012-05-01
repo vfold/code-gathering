@@ -1,36 +1,30 @@
 #!/bin/bash
 
-projectName=$1
-projectPath=projects/${1}
-base="https://raw.github.com/rvaronos/code-gathering/master/terminal"
+ #*************************************************
+ # Start the constructor
+ #*************************************************
 
-include(){
-if [ -f $2 ]
-then
-echo "${2} exists.."
-else
-get ${1} ${2}
-fi
-source ${2}
+source constructor
+
+ #*************************************************
+ # Install and configure github
+ #*************************************************
+
+installGithub() {
+
+	#TODO install github
+	include tools github 
+	setupGithub
 }
-get(){
-curl -# ${base}/${1}/${2} > ~/.cache/code-gathering/${projectName}/${2}
-{
 
-include tools constructor
-include tools string
-include tools github
+ #*************************************************
+ # Install packages 
+ #*************************************************
 
-config=https://raw.github.com/rvaronos/code-gathering/master/terminal/configure/
-
-setupGithub
+installPackages() {
 
 info "Getting packages to install"
-get ${projectPath} packages
-
- #*************************************************
- # Installing packages
- #*************************************************
+get ${projectURL} packages
 
  while read line
  do
@@ -42,21 +36,9 @@ get ${projectPath} packages
 
  done < packages
 
- ask "Do you have a github account [y/n]?"
+}
 
- if [ $reply ]
- 	then
- 	setupGithub;
- else
- 	read -n 1 -s;
-
- 	sleep 3;
- 	google -chrome "https://github.com/signup/free"
- 	read -n 1 -s;
- 	setupGithub;
- fi
-
-#*************************************************
+ #*************************************************
  # Setup Code Gathering Projects
  #*************************************************
 
@@ -83,3 +65,6 @@ get ${projectPath} packages
  	npm install -g compiler-js
  	cd ~/"Library/Application Support/Sublime Text 2/Packages/"
  }
+
+printOptions "Install Packages" "Setup your Github account"
+option installPackages installGithub

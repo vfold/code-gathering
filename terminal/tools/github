@@ -4,11 +4,14 @@ setupGithub() {
 
  ask "Do you have a github account [y/n]?"
 
- if [ !$reply ]
- 	read -n 1 -s;
- 	sleep 3;
- 	google -chrome "https://github.com/signup/free"
- 	read -n 1 -s;
+if $reply
+then
+info "Awesome! No need to register"
+else
+ 	step "Register an account at github.com"
+	sleep 1
+ 	google-chrome "https://github.com/signup/free"
+ 	pause
  fi
 
  	cd ~/.ssh 
@@ -82,4 +85,4 @@ fi
  pause;
 }
 
-info Added github functions
+info "Added github functions"
