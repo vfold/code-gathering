@@ -69,8 +69,8 @@ checkProfile CodeGathering
 mkdir -p ${project}
 cd ${project}
 
-get ${base}/projects/configure script
-gnome-terminal --tab-with-profile=CodeGathering -e script
+get ${base}/projects/configure main
+gnome-terminal --tab-with-profile=CodeGathering -e main
 
 }
 
