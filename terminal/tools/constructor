@@ -24,6 +24,7 @@ projectPath=$PWD
  norm=9 
 
 base=${2}
+cache="~/.cache/code-gathering/"
 
 #***************************************************
 # String Functions
@@ -164,10 +165,10 @@ log "Using cached file: ${2}"
 else
 getCommon ${1} ${2}
 fi
-source ${2}
+source ${cache}/${2}
 }
 getCommon(){
-get ${base}/${1}/${2} ~/.cache/code-gathering/${2}
+get ${base}/${1}/${2} ${cache}/${2}
 }
 getLocal(){
 get ${base}/${1}/${2} ~/.cache/code-gathering/${projectName}/${2} 

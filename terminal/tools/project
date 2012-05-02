@@ -64,12 +64,11 @@ printf "\rSelected project: ${project}\n"
 #************************************************************************
 
 include tools profile
-
 checkProfile CodeGathering
 
 mkdir -p ${project}
 cd ${project}
-get ${baseURL}/projects/${project} main
+get "${baseURL}/projects/${project}/main" main
 
 gnome-terminal --tab-with-profile=CodeGathering --command="bash main ${project} ${baseURL}"
 }
