@@ -56,20 +56,9 @@ fi
  readInput "Enter First and Last name, followed by [ENTER]"
  fullname=$reply
 
- git config--global user.name $fullname
- git config--global user.email $email
+ git config --global user.name $fullname
+ git config --global user.email $email
 
- readInput "Enter github username, followed by [ENTER]";
- github_user=$reply;
-
- google-chrome "https://github.com/settings/admin"
- step "Copy API token..."
-
- readInput "Paste API token [CONTROL+SHIFT+V], followed by [ENTER]";
- token=$reply;
-
- git config--global github.user $username
- git config--global github.token $token
 
  info "*Note* If you ever change your GitHub password, a new token will be created and will need to be updated..."
  pause;
