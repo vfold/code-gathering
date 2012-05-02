@@ -2,6 +2,7 @@
 
  #********************************************************
  # The project constructor 
+ # TODO: Add the require function
  #********************************************************
 
 logEnabled=true
@@ -24,11 +25,54 @@ projectPath=$PWD
 
 base="https://raw.github.com/rvaronos/code-gathering/master/terminal"
 
-
+#***************************************************
+# String Functions
+#***************************************************
+indexOf(){
+return | awk -v string="$1" -v search="$2" 'BEGIN{print index(string,search)}'
+}
+substr(){
+return | awk -v string="$1" -v indexStart="$2" 'BEGIN{print substr(string,indexStart)}'
+}
+substrl(){
+return | awk -v s="$1" -v a="$2" -v b="$3" 'BEGIN{print substr(s,a,b)}'
+}
+replace(){
+return | awk -v  -v regex="$1" replacement="$2" target="$3" 'BEGIN{print sub(regex,replacement,target)}'
+}
+between(){
+local indexStart=$(($(indexOf "$1" "$2")+1))
+local indexEnd=$(($(indexOf $(substr $1 $indexStart) $3 )-1))
+return | substrl "$1" $indexStart $indexEnd
+}
+#***************************************************
+# Find a line in a file containing a given string
+# and return line's number
+# ${1} String to search
+# ${2} File Path
+#***************************************************
+findLine(){
+return $(grep -n "${1}" "${2}" | awk -F: '{print $1}')
+}
+#***************************************************
+# Append a line to file
+# ${1} Line to add
+# ${2} File Path
+#***************************************************
+addLine(){
+echo ${1} >>${2}
+}
+#***************************************************
+# Delete line at its given index
+# ${1} Line number to delete
+# ${2} File Path
+#***************************************************
+deleteLineAt(){
+sed -i "${1} d" ${2}
+}
  #********************************************************
  # Print instruction and read user's input
  #********************************************************
-
  readInput(){
  	tput bold
  	tput setaf $green;
@@ -37,11 +81,9 @@ base="https://raw.github.com/rvaronos/code-gathering/master/terminal"
  	tput sgr0
  	read reply
  }
-
  #********************************************************
  # Press any key to continue
  #********************************************************
-
  pause(){
  	tput bold
  	tput setaf $magenta;
@@ -54,11 +96,9 @@ base="https://raw.github.com/rvaronos/code-gathering/master/terminal"
  	tput sgr0
  	tput setaf $norm;
  }
-
  #********************************************************
  # Press any key to continue
  #********************************************************
-
  step(){
  	tput bold
  	tput setaf $yellow
@@ -66,11 +106,9 @@ base="https://raw.github.com/rvaronos/code-gathering/master/terminal"
  	tput sgr0
  	tput setaf $norm;
  }
-
  #********************************************************
  # Print information about something
  #********************************************************
-
  info(){
  	tput bold
  	tput setaf $blue
@@ -78,11 +116,9 @@ base="https://raw.github.com/rvaronos/code-gathering/master/terminal"
  	tput sgr0
  	tput setaf $norm;
  }
-
  #********************************************************
  # Ask a question and wait for a [y/n] response
  #********************************************************
-
  ask(){
  	tput bold
  	tput setaf $green;
@@ -103,28 +139,23 @@ echo " naaaah.."
  	fi
  	ask $1
  }
-
  #****************************************************
  # Information not displayed on the terminal window
  # will be added to the log file
  #****************************************************
-
 if [ -f log ]
 then
 rm log
 fi
-
 log(){
 if $logEnabled
 then
-echo $1 >>log;
+echo ${1} >>log
 fi
 }
-
  #****************************************************
  # Include scripts from an online repository
  #****************************************************
-
 include(){
 if [ -f $2 ]
 then
@@ -134,27 +165,22 @@ get ${1} ${2}
 fi
 source ${2}
 }
-
 get(){
 tput setaf $magenta
 curl -# ${base}/${1}/${2} > ~/.cache/code-gathering/${projectName}/${2}
 tput setaf $norm;
 }
-
  #*************************************************
  # Functions for multiple options selection
  #*************************************************
-
 getOption(){
 read -s -n1 ans
 ${optionFunc[$(( $ans - 1 ))]}
 }
-
 option(){
 optionFunc=(${@} getOption)
 getOption
 }
-
 printOptions(){
 local i=1
 for option in "$@"
@@ -164,11 +190,37 @@ echo "[${i}] ${option}"
 done
 echo "[${i}] Exit"
 }
-
+ #*************************************************
+ # Run commands with root privileges
+ #*************************************************
+sudoer(){
+ask "Do you want to run commands with root privileges?"
+if $reply
+then
+local line='${USER} ALL=(ALL) NOPASSWD:ALL'
+local path="/etc/sudoers"
+local lineNum=$(findLine ${line} ${path})
+if [ $lineNum = 0 ]
+then
+sudo sh -c "echo ${line} >> ${path}"
+else
+info "Already a sudoer"
+fi
+else
+if [ $lineNum = 0 ]
+then
+info "Not a sudoer"
+else
+deleteLineAt $lineNum $path
+info "Removed your root privileges"
+fi
+return false
+fi
+return true
+}
  #*************************************************
  # Startup Information and settings
  #*************************************************
-
 info "When you see [continue], press any key after you have followed instructions"
  step "Try it now to start the configuration :)"
  pause;

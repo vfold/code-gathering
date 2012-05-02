@@ -1,26 +1,26 @@
 #!/bin/bash
 
 #*************************************************
- # Add APT source the package's list file
+# Add APT source the package's list file
 # ${1} Package name
 # ${2} DEB line
- #*************************************************
+#*************************************************
 
 addSource(){
 
 local sourcePath="/etc/apt/sources.list.d/${1}.list"
+local debLine="deb http://${2}"
 
 if [ -f ${sourcePath} ]
 then
 
 # Search for an existing source line in text file
-search=Profile${id}
-list=$(gconftool-2 --get "/apps/gnome-terminal/global/profile_list")
-i=$(indexOf $list ${2})
 
-if [ $i = 0 ]
+if [ $(findLine ${debLine} ${sourcePath}) = 0 ]
 then
-	list=[${search},$( substr $list 2 ) 
+	addLine ${debLine} ${sourcePath}
+else
+	log "\"${sourcePath}\" already contains \"${debLine}\"" 
 fi
 
 sudo sh -c "echo \"${2}\" >> ${sourcePath}"

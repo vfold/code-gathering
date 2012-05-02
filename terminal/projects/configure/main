@@ -1,30 +1,20 @@
 #!/bin/bash
-
  #*************************************************
  # Start the constructor
  #*************************************************
-
 source constructor
-
  #*************************************************
  # Install and configure github
  #*************************************************
-
 installGithub() {
-
 	#TODO install github
 	include tools github 
 	setupGithub
 }
-
- 
-
  #*************************************************
  # Setup Code Gathering Projects
  #*************************************************
-
  setupProjects() {
-
  	cd ~
  	mkdir development
  	cd development

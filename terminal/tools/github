@@ -2,11 +2,12 @@
 
 setupGithub() {
 
- ask "Do you have a github account [y/n]?"
+ask "Do you have a github account [y/n]?"
 
 if $reply
 then
 info "Awesome! No need to register"
+sleep 1
 else
  	step "Register an account at github.com"
 	sleep 1
@@ -83,6 +84,11 @@ fi
 
  info "*Note* If you ever change your GitHub password, a new token will be created and will need to be updated..."
  pause;
+}
+restoreGithub(){
+ 	cd ~/.ssh 
+     	# Copies the id_rsa and id_rsa.pub files into key_backup
+     	cp key_backup/id_rsa* ./
 }
 
 info "Added github functions"
