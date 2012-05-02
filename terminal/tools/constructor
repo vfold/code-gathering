@@ -23,7 +23,7 @@ projectPath=$PWD
  white=7
  norm=9 
 
-base="https://raw.github.com/rvaronos/code-gathering/master/terminal"
+base=${2}
 
 #***************************************************
 # String Functions
@@ -104,7 +104,8 @@ sed -i "${1} d" ${2}
  	tput setaf $yellow
  	echo "${1}"
  	tput sgr0
- 	tput setaf $norm;
+ 	tput setaf $norm
+pause
  }
  #********************************************************
  # Print information about something
@@ -161,13 +162,19 @@ if [ -f $2 ]
 then
 log "Using cached file: ${2}"
 else
-get ${1} ${2}
+getCommon ${1} ${2}
 fi
 source ${2}
 }
+getCommon(){
+get ${base}/${1}/${2} ~/.cache/code-gathering/${2}
+}
+getLocal(){
+get ${base}/${1}/${2} ~/.cache/code-gathering/${projectName}/${2} 
+}
 get(){
 tput setaf $magenta
-curl -# ${base}/${1}/${2} > ~/.cache/code-gathering/${projectName}/${2}
+curl -# ${1} > ${2}
 tput setaf $norm;
 }
  #*************************************************
@@ -177,7 +184,7 @@ getOption(){
 read -s -n1 ans
 ${optionFunc[$(( $ans - 1 ))]}
 }
-option(){
+initOptions(){
 optionFunc=(${@} getOption)
 getOption
 }
@@ -218,11 +225,5 @@ return false
 fi
 return true
 }
- #*************************************************
- # Startup Information and settings
- #*************************************************
-info "When you see [continue], press any key after you have followed instructions"
- step "Try it now to start the configuration :)"
- pause;
 
 
