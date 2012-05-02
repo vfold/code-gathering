@@ -17,46 +17,7 @@ installGithub() {
 	setupGithub
 }
 
- #*************************************************
- # Install packages 
- #*************************************************
-
-addAPT(){
-sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-}
-
-installPackages() {
-
-local action=
-
-include tools string
-
-info "Getting packages to install"
-get ${projectURL} packages
-
- while read line
- do
-
- 		if [[ $line = *[* ]]
-	
- 		then
-
-case $(between $line "[" "]") in
-
-"key") 
-    ;;
-"ppa")  
-    ;;
-"list") 
-    ;;
-"package") 
-   ;;
-esac
- fi
-
- done < packages
-
-}
+ 
 
  #*************************************************
  # Setup Code Gathering Projects

@@ -1,0 +1,67 @@
+#!/bin/bash
+
+#*************************************************
+ # Add APT source the package's list file
+# ${1} Package name
+# ${2} DEB line
+ #*************************************************
+
+addSource(){
+
+local sourcePath="/etc/apt/sources.list.d/${1}.list"
+
+if [ -f ${sourcePath} ]
+then
+
+# Search for an existing source line in text file
+search=Profile${id}
+list=$(gconftool-2 --get "/apps/gnome-terminal/global/profile_list")
+i=$(indexOf $list ${2})
+
+if [ $i = 0 ]
+then
+	list=[${search},$( substr $list 2 ) 
+fi
+
+sudo sh -c "echo \"${2}\" >> ${sourcePath}"
+
+fi
+
+}
+
+#*************************************************
+ # Install packages 
+ #*************************************************
+
+installPackages() {
+
+local action=
+
+include tools string
+
+info "Getting packages to install"
+get ${projectURL} packages
+
+ while read line
+ do
+
+ 		if [[ $line = *[* ]]
+	
+ 		then
+
+case $(between $line "[" "]") in
+
+"key") 
+    ;;
+"ppa")  
+    ;;
+"list") 
+    ;;
+"package") 
+   ;;
+esac
+ fi
+
+ done < packages
+
+}
