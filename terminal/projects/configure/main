@@ -2,7 +2,7 @@
  #*************************************************
  # Start the constructor
  #*************************************************
-include constructor
+source ../constructor
  #*************************************************
  # Install and configure github
  #*************************************************
@@ -37,5 +37,12 @@ installGithub() {
  	cd ~/"Library/Application Support/Sublime Text 2/Packages/"
  }
 
-printOptions "Install Packages" "Setup your Github account"
-option installPackages installGithub
+exitOptions(){
+echo "To start again, press Relaunch"
+sleep 1
+clear
+exit
+}
+
+printOptions "Install Packages" "Setup your Github account" "Exit"
+initOptions installPackages installGithub exitOptions

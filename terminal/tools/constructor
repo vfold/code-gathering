@@ -23,8 +23,21 @@ projectPath=$PWD
  white=7
  norm=9 
 
-base=${2}
-cache="~/.cache/code-gathering/"
+# Check if baseURL is already defined
+if [ -z "$baseURL" ]
+then
+if [ -z "${2}" ]
+then
+echo "Cannot start constructor without a baseURL"
+return 
+else
+baseURL=${2}
+fi
+else
+echo "baseURL has already value: ${baseURL}"
+fi
+
+cache=~/.cache/code-gathering
 
 #***************************************************
 # String Functions
@@ -159,24 +172,24 @@ fi
  # Include scripts from an online repository
  #****************************************************
 include(){
-if [ -f $2 ]
+getCommon ${1} ${2}
+source ${2}
+}
+getCommon(){
+get ${baseURL}/${1}/${2} ${cache}/${2}
+}
+getLocal(){
+get ${baseURL}/${1}/${2} ${cache}/${projectName}/${2}
+}
+get(){
+if [ -f ${2} ]
 then
 log "Using cached file: ${2}"
 else
-getCommon ${1} ${2}
-fi
-source ${cache}/${2}
-}
-getCommon(){
-get ${base}/${1}/${2} ${cache}/${2}
-}
-getLocal(){
-get ${base}/${1}/${2} ~/.cache/code-gathering/${projectName}/${2} 
-}
-get(){
 tput setaf $magenta
 curl -# ${1} > ${2}
 tput setaf $norm;
+fi
 }
  #*************************************************
  # Functions for multiple options selection
@@ -196,7 +209,6 @@ do
 echo "[${i}] ${option}"
 ((i++))
 done
-echo "[${i}] Exit"
 }
  #*************************************************
  # Run commands with root privileges

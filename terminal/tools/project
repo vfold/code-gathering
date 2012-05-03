@@ -12,8 +12,14 @@ cd ~/.cache/
 mkdir -p code-gathering
 cd code-gathering
 
+if [ -f $2 ]
+then
+echo "Using cached file: constructor"
+else
 curl -# ${baseURL}/tools/constructor > constructor
+fi
 source constructor
+clear
 
 loadProject(){
  
@@ -73,14 +79,12 @@ get "${baseURL}/projects/${project}/main" main
 gnome-terminal --tab-with-profile=CodeGathering --command="bash main ${project} ${baseURL}"
 }
 
-clear;
-
 exitOptions(){
 echo "To start again, type: loadProject"
 }
 
 echo -e "${sep}\nChoose an option:\n${sep}"
-printOptions "Initialise Project" "Clear all cache"
+printOptions "Initialise Project" "Clear all cache" "Exit"
 echo ${sep}
 initOptions initProject clearAllCache exitOptions
 
