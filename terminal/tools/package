@@ -30,37 +30,30 @@ fi
 }
 
 #*************************************************
- # Install packages 
- #*************************************************
+# Install packages 
+#*************************************************
 
 installPackages() {
 
-local action=
+info "Getting packages to install"
+include packages -local
+
+installPackage(){
+if which ${1} > /dev/null
+then
+   echo "${1} package already exists"
+then
+      sudo apt-get install ${1}
+   fi
+fi
+}
 
 include tools string
 
-info "Getting packages to install"
+
 get ${projectURL} packages
 
- while read line
- do
 
- 		if [[ $line = *[* ]]
-	
- 		then
-
-case $(between $line "[" "]") in
-
-"key") 
-    ;;
-"ppa")  
-    ;;
-"list") 
-    ;;
-"package") 
-   ;;
-esac
- fi
 
  done < packages
 

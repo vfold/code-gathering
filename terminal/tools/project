@@ -62,7 +62,7 @@ printf "\n\n"
 
 echo -n "Enter project's index: "
 read -s -n1 index
-project=${projects[$index]}
+projectName=${projects[$index]}
 printf "\rSelected project: ${project}\n"
 
 #************************************************************************
@@ -72,9 +72,9 @@ printf "\rSelected project: ${project}\n"
 include tools profile
 checkProfile CodeGathering
 
-mkdir -p ${project}
-cd ${project}
-get "${baseURL}/projects/${project}/main" main
+mkdir -p ${projectName}
+cd ${projectName}
+getLocal main 
 
 gnome-terminal --tab-with-profile=CodeGathering --command="bash main ${project} ${baseURL}"
 }
