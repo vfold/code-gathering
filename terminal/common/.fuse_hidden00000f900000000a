@@ -11,8 +11,6 @@ iwd=${PWD}
 cd ~/.cache/
 mkdir -p code-gathering
 cd code-gathering
-mkdir -p common
-cd common
 
 if [ "${1}" == "--ncc" ] || $( ! [ -f constructor ] )
 then
