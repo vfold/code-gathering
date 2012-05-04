@@ -6,6 +6,8 @@ iwd=${PWD}
 
 #**********************************************************
 # Get cache folder and include constructor to the source 
+# TODO: When cache clears do not delete the common folder
+# and the constructor script
 #**********************************************************
 
 cd ~/.cache/
