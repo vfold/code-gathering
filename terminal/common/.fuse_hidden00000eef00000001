@@ -1,0 +1,101 @@
+#!/bin/bash
+
+baseURL="https://raw.github.com/rvaronos/code-gathering/master/terminal"
+sep="----------------------"
+iwd=${PWD}
+
+#************************************************
+# Get cache folder and constructor ready
+#************************************************
+
+cd ~/.cache/
+mkdir -p code-gathering
+cd code-gathering
+if [ -f constructor ]
+then
+echo "Using cached file: constructor"
+else
+curl -# ${baseURL}/tools/constructor > constructor
+fi
+source constructor
+
+loadProject(){
+ 
+#****************************************************
+# Get scripts from an online repository
+#****************************************************
+
+clearAllCache(){
+rm -rf ~/.cache/code-gathering/*
+echo "Cache cleared"
+getOption
+}
+
+initProject(){
+
+#************************************************
+# List available projects
+#************************************************
+
+projects=()
+
+read -r LINE_ARRAY <<< "$(curl -# ${baseURL}/projects/list)"
+
+IFS=";" 
+
+for x in "${LINE_ARRAY[@]}"
+do
+
+local i=0
+
+read -ra STR_ARRAY <<< "$x"
+printf "\n[%1d] : %5s - %20s" ${i} ${STR_ARRAY[0]} ${STR_ARRAY[1]}
+projects[${i}]=${STR_ARRAY[0]}
+
+((i++))
+
+done
+
+printf "\n\n"
+
+echo -n "Enter project's index: "
+read -s -n1 index
+projectName=${projects[$index]}
+printf "\rSelected project: ${project}\n"
+
+#************************************************************************
+# Start gnome terminal with the script specified running custom Profile
+#************************************************************************
+
+include tools profile
+checkProfile CodeGathering
+
+mkdir -p ${projectName}
+cd ${projectName}
+getLocal main 
+
+gnome-terminal --tab-with-profile=CodeGathering --command="bash main ${project} ${baseURL}"
+}
+
+exitOptions(){
+echo "To start again, type: loadProject"
+}
+
+echo -e "${sep}\nChoose an option:\n${sep}"
+printOptions "Initialise Project" "Clear all cache" "Exit"
+echo ${sep}
+initOptions initProject clearAllCache exitOptions
+
+}
+loadProject
+# Go back to initial working directory
+cd "${iwd}"
+
+
+
+
+
+
+
+
+

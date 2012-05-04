@@ -1,9 +1,8 @@
  #!/bin/bash
 
- #********************************************************
+ #######################################################
  # The project constructor 
- # TODO: Add the require function
- #********************************************************
+ #######################################################
 
 logEnabled=true
 projectName=$1
@@ -22,20 +21,6 @@ projectPath=$PWD
  cyan=6
  white=7
  norm=9 
-
-# Check if baseURL is already defined
-if [ -z "$baseURL" ]
-then
-if [ -z "${2}" ]
-then
-echo "Cannot start constructor without a baseURL"
-return 
-else
-baseURL=${2}
-fi
-else
-echo "baseURL has already value: ${baseURL}"
-fi
 
 cache=~/.cache/code-gathering
 
@@ -171,15 +156,11 @@ fi
  #****************************************************
  # Include scripts from an online repository
  #****************************************************
-include(){
-getCommon ${1} ${2}
-source ${2}
-}
 getCommon(){
-get ${baseURL}/${1}/${2} ${cache}/${2}
+get ${baseURL}/common/${1} ${cache}/${1}
 }
 getLocal(){
-get ${baseURL}/${1}/${2} ${cache}/${projectName}/${2}
+get ${baseURL}/projects/${projectName}/${1} ${cache}/${projectName}/${1}
 }
 get(){
 if [ -f ${2} ]
@@ -193,26 +174,76 @@ fi
 }
  #*************************************************
  # Functions for multiple options selection
+# ${1} An array of titles for each option 
+# ${2} An array of callbacks when a specific indexed
+#      is selected
+# ${3} The statement to run when option is selected
  #*************************************************
-getOption(){
-read -s -n1 ans
-${optionFunc[$(( $ans - 1 ))]}
-}
-initOptions(){
-optionFunc=(${@} getOption)
-getOption
-}
-printOptions(){
+
+options(){
+
+#-----------------------------------------
+# Get Arrays from arguments
+#------------------------------------------
+
+declare -a titles=("${!1}")
+declare -a callbacks=("${!2}")
+local command=${3}
+
+#-----------------------------------------
+# Print indexed option titles as given
+#------------------------------------------
+
 local i=1
-for option in "$@"
+for title in "${titles[@]}"
 do
-echo "[${i}] ${option}"
+echo "[${i}] ${title}"
 ((i++))
 done
+
+#---------------------------
+# Read answer from user 
+# collect callback (${2})
+# and run command (${3})
+#---------------------------
+
+getOption(){
+read -s -n1 ans
+if [ ! $(echo "$ans" | grep -E "^[1-${#callbacks[@]}]+$") ]
+then
+getOption
+return
+fi
+callback=${callbacks[$(( $ans - 1 ))]}
+eval $command
 }
- #*************************************************
- # Run commands with root privileges
- #*************************************************
+
+#-----------------------------------
+# Init the option selection  
+#-----------------------------------
+
+getOption
+}
+
+ #****************************************************
+ # Add to source when a script depends on another
+ # Resolves conflicts with the source command
+ #****************************************************
+
+depends(){
+
+
+getCommon ${1} ${2}
+source ${2}
+
+}
+
+
+
+ #****************************************************
+ # Prompt user to run commands with root privileges
+ #****************************************************
+
 sudoer(){
 ask "Do you want to run commands with root privileges?"
 if $reply
@@ -238,5 +269,24 @@ return false
 fi
 return true
 }
+
+#*************************************************
+# Check if baseURL is already defined
+#*************************************************
+
+echo ${1}
+
+if [ -z "$baseURL" ]
+then
+if [ -z "${2}" ]
+then
+echo "Cannot start constructor without a baseURL"
+exit
+else
+baseURL=${2}
+fi
+else
+log "baseURL has already value: ${baseURL}"
+fi
 
 

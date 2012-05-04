@@ -11,15 +11,13 @@ iwd=${PWD}
 cd ~/.cache/
 mkdir -p code-gathering
 cd code-gathering
-
-if [ -f $2 ]
+if [ -f constructor ]
 then
 echo "Using cached file: constructor"
 else
 curl -# ${baseURL}/tools/constructor > constructor
 fi
 source constructor
-clear
 
 loadProject(){
  
@@ -39,7 +37,8 @@ initProject(){
 # List available projects
 #************************************************
 
-projects=()
+titles=()
+callbacks=()
 
 read -r LINE_ARRAY <<< "$(curl -# ${baseURL}/projects/list)"
 
@@ -49,20 +48,17 @@ for x in "${LINE_ARRAY[@]}"
 do
 
 local i=0
-
 read -ra STR_ARRAY <<< "$x"
-printf "\n[%1d] : %5s - %20s" ${i} ${STR_ARRAY[0]} ${STR_ARRAY[1]}
-projects[${i}]=${STR_ARRAY[0]}
-
+titles[${i}]="${STR_ARRAY[0]} - ${STR_ARRAY[1]}"
+callbacks[${i}]=${STR_ARRAY[0]}
 ((i++))
 
 done
 
-printf "\n\n"
-
 echo -n "Enter project's index: "
-read -s -n1 index
-projectName=${projects[$index]}
+options ${options} ${callbacks} "projectName=${callback}" 
+
+printf "\n\n"
 printf "\rSelected project: ${project}\n"
 
 #************************************************************************
@@ -84,9 +80,21 @@ echo "To start again, type: loadProject"
 }
 
 echo -e "${sep}\nChoose an option:\n${sep}"
-printOptions "Initialise Project" "Clear all cache" "Exit"
+
+local titles=(
+"Initialise Project"
+"Clear all cache"
+"Exit"
+)
+local callbacks=(
+initProject
+clearAllCache
+exitOptions
+)
+
+options ${titles} ${callbacks} "${callback}()"
+
 echo ${sep}
-initOptions initProject clearAllCache exitOptions
 
 }
 loadProject

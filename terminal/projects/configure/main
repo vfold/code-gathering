@@ -3,6 +3,8 @@
  # Start the constructor
  #*************************************************
 source ../constructor
+depends package
+
  #*************************************************
  # Install and configure github
  #*************************************************
@@ -14,7 +16,7 @@ installGithub() {
  #*************************************************
  # Setup Code Gathering Projects
  #*************************************************
- setupProjects() {
+ setupCodeGathering() {
  	cd ~
  	mkdir development
  	cd development
@@ -43,6 +45,16 @@ sleep 1
 clear
 exit
 }
-
-printOptions "Install Packages" "Setup your Github account" "Exit"
-initOptions installPackages installGithub exitOptions
+titles=(
+"Install Packages"
+"Install and configure github"
+"Code Gathering project bundle configuration"
+"Exit"
+)
+callbacks=(
+installPackages
+installGithub
+setupCodeGathering
+exitOptions
+)
+options titles[@] callbacks[@] '${callback}'
