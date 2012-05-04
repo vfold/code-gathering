@@ -2,7 +2,7 @@
  #*************************************************
  # Start the constructor
  #*************************************************
-source ../constructor
+source ~/.cache/code-gathering/common/constructor
 depends package github
 
  #*************************************************
