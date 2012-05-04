@@ -14,11 +14,13 @@ cd code-gathering
 
 if [ "${1}" == "--ncc" ] || $( ! [ -f constructor ] )
 then
-curl -# ${baseURL}/tools/constructor > constructor
+curl -# ${baseURL}/common/constructor > constructor
 else
 echo "Using cached file: constructor"
 fi
 source constructor
+
+depends profile
 
 loadProject(){
  
@@ -64,7 +66,7 @@ echo "Selected project: ${projectName}"
 # Start gnome terminal with the script specified running custom Profile
 #************************************************************************
 
-include tools profile
+
 checkProfile CodeGathering
 
 mkdir -p ${projectName}

@@ -3,14 +3,13 @@
  # Start the constructor
  #*************************************************
 source ../constructor
-depends package
+depends package github
 
  #*************************************************
  # Install and configure github
  #*************************************************
 installGithub() {
 	#TODO install github
-	include tools github 
 	setupGithub
 }
  #*************************************************

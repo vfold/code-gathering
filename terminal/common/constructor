@@ -157,7 +157,7 @@ fi
  # Include scripts from an online repository
  #****************************************************
 getCommon(){
-get ${baseURL}/common/${1} ${cache}/${1}
+get ${baseURL}/common/${1} ${cache}/common/${1}
 }
 getLocal(){
 get ${baseURL}/projects/${projectName}/${1} ${cache}/${projectName}/${1}
@@ -230,15 +230,18 @@ getOption
  # Resolves conflicts with the source command
  #****************************************************
 
+dependencies=()
 depends(){
-
-
-getCommon ${1} ${2}
-source ${2}
-
+for dependency in "$@"
+do 
+if [ -z ${dependencies[$dependency]} ]
+then
+dependencies[$dependency]=true
+getCommon ${dependency}
+source ${cache}/common/${dependency}
+fi
+done
 }
-
-
 
  #****************************************************
  # Prompt user to run commands with root privileges
@@ -273,8 +276,6 @@ return true
 #*************************************************
 # Check if baseURL is already defined
 #*************************************************
-
-echo ${1}
 
 if [ -z "$baseURL" ]
 then
