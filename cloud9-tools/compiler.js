@@ -1,4 +1,4 @@
-var projectPath = process.ARGS[2];
-
-process.chdir(projectPath);
-require("compiler-js").init("main");
+require("compiler-js").init([
+    // Project path
+    "-p",process.argv[0]||"./"
+    ]);
