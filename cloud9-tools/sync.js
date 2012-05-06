@@ -1,0 +1,1 @@
+require("ftp-sync").init("main");
