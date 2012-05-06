@@ -1,3 +1,5 @@
 require("../node-compiler-js/compiler-js.js").init([
-    // Project path
+// Setting local path
+"-l","node-ftp-sync",
+"-d"
 ]);

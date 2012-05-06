@@ -7,7 +7,7 @@ var pathUglify = "uglify-js",
     pro = require(pathUglify).uglify,
     path, files, stats, countFile = 0,
     countShaderFiles = 0,
-    outputDir, classMainName, classInit, classPreInit, debug, pathSource, pathOutput,
+    outputDir, classMainName, classInit, classPreInit, debug, localPath, pathSource, pathOutput, source, output,
     /********************************************
      * javascript Code
      * Original Merged -> Abstract Syntax Tree
@@ -24,25 +24,31 @@ module.exports = {
          ********************************************/
 
         (function(args, options) {
-            var i,option;
-            for (i = 0; i < args.length; i++) {
-                var arg = args[i];
-                if (arg.indexOf("-") == 0) {
+            var option,func,defVal;
+            // the forEach function can do a synchronous loop
+            args.forEach(function(arg,i){
+                if (arg.charAt(0) == "-") {
                     option = arg.substr(1);
                     if (options.hasOwnProperty(option)) {
-                        if (args[i++].indexOf("-") == -1) {
-                            options[option][0](args[i++]);
-                            delete options[option];
+                        func =  options[option][0];
+                        defVal = options[option][1]
+                        delete options[option];
+                        if(i!=args.length-1){
+                            if (args[i+1].charAt(0) != "-") {
+                            func(args[i+1]);
+                            return;
+                        }
                         }
                         // This case is for Boolean type arguments, switching its default state
-                        else{
-                            options[option][0](!options[option][1]);
-                        }
+                        func(!defVal);
                     }
+                    else{
+                        console.log("Invalid option: "+arg)
+                        }
                 }
-            }
+            });
             // Run functions with default values for undeclared arguments
-            for(option in options){
+            for (option in options) {
                 options[option][0](options[option][1]);
             }
         })(args, {
@@ -61,22 +67,31 @@ module.exports = {
             false],
             // Read all files from source folder specified in given arguments
             s: [function(value) {
-                pathSource = value;
-                try {
-                    stats = fs.lstatSync(pathSource);
-                    if (!stats.isDirectory()) {
-                        throw "Source path is not a directory";
-                    }
-                }
-                catch (e) {
-                    throw "Could not find source folder: \"" + pathSource + "\"\nCurrent working directory: \"" + process.cwd() + "\"";
-                }
+                source = value;
             }, "src"],
             // Output path for compiled data
             o: [function(value) {
-                pathOutput = value;
-            }, "output"]
+                output = value;
+            }, "output"],
+            // Local Path to look for folders
+            l: [function(value) {
+                localPath = value+"/";
+            }, ""]
         });
+        pathSource = localPath + source;
+        pathOutput = localPath + output;
+        /****************************************
+         * Check if source path exists
+         ****************************************/
+        try {
+            stats = fs.lstatSync(pathSource);
+            if (!stats.isDirectory()) {
+                throw "Source path is not a directory";
+            }
+        }
+        catch (e) {
+            throw "Could not find source folder: \"" + pathSource + "\"\nCurrent working directory: \"" + process.cwd() + "\"";
+        }
         /****************************************
          * Loop through the source folder and
          * obtain the js files for compilation
