@@ -18,26 +18,34 @@ var pathUglify = "uglify-js",
 module.exports = {
 
     init: function(args) {
-        
+
         /********************************************
          * Loop through arguments and check options
          ********************************************/
 
-        function checkArguments(args, options) {
-            var i;
+        (function(args, options) {
+            var i,option;
             for (i = 0; i < args.length; i++) {
                 var arg = args[i];
                 if (arg.indexOf("-") == 0) {
-                    var option = arg.substr(1);
+                    option = arg.substr(1);
                     if (options.hasOwnProperty(option)) {
                         if (args[i++].indexOf("-") == -1) {
-                            options[option](args[i++]);
+                            options[option][0](args[i++]);
+                            delete options[option];
+                        }
+                        // This case is for Boolean type arguments, switching its default state
+                        else{
+                            options[option][0](!options[option][1]);
                         }
                     }
                 }
             }
-        }
-        checkArguments(args,{
+            // Run functions with default values for undeclared arguments
+            for(option in options){
+                options[option][0](options[option][1]);
+            }
+        })(args, {
             // Add Init class at end
             i: [function(value) {
                 classInit = value;
@@ -49,7 +57,8 @@ module.exports = {
             // Debug mode (True/False)
             d: [function(value) {
                 debug = value;
-            },false],
+            },
+            false],
             // Read all files from source folder specified in given arguments
             s: [function(value) {
                 pathSource = value;

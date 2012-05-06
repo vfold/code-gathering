@@ -1,4 +1,3 @@
-require("compiler-js").init([
+require("../node-compiler-js/compiler-js.js").init([
     // Project path
-    "-p",process.argv[0]||"./"
-    ]);
+]);
