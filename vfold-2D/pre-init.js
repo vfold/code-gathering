@@ -1,3 +1,4 @@
+
  /**********************************************
   * Class definition
   * Make these private and finish fixing it
@@ -11,6 +12,9 @@
    window.define = function(name, definition, parents) {
 
      self = {};
+     if(window.hasOwnProperty(name)){
+      return;
+     }
      window[name] = definition(self);
 
      /**********************************************
@@ -41,3 +45,7 @@
      window[name].prototype = self;
    }
  })();
+// call super constructor
+  function parent(constructor,parameters){
+  constructor.apply(arguments.callee.prototype,parameters);
+ }
