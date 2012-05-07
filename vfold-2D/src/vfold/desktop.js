@@ -1,16 +1,18 @@
-define("Desktop",function(self){
+define("Desktop", function(self) {
 
-    var Desktop = function() {
+	var treeReposition = function() {},
+		tree, bg;
 
-		stage.add(this);
+	var Desktop = function() {
 
-		var treeReposition = function() {},
-			tree, bg = new Kinetic.Shape({
+		parent(Layer);
+
+			bg = new Shape({
 				drawFunc: function() {
 
 					var w = stage.getWidth(),
 						h = stage.getHeight(),
-						ctx = this.getContext(),
+						ctx = self.getContext(),
 						grd = ctx.createRadialGradient(w, h, 100, w, h, w);
 
 					grd.addColorStop(0, "#3a4e4e");
@@ -21,27 +23,29 @@ define("Desktop",function(self){
 				}
 			});
 
-		this.add(bg);
+			loadBitmap("tree.png", function(image) {
 
-		loadImage("tree.png", function(image) {
+				tree = image;
+				self.add(tree);
 
-			tree = image;
-			log("hey i did it!!");
-			this.add(tree);
+				treeReposition = function() {
+					put(tree.attrs, {
+						x: stage.width - 400,
+						y: stage.height - 400
+					});
+					self.draw();
+				};
+				treeReposition();
+			});
+			stage.addResizeCallback(function() {
+				treeReposition();
+			});
 
-			treeReposition = function() {
-				put(tree.attrs, {
-					x: stage.getWidth() - 400,
-					y: stage.getHeight() - 400
-				});
-				this.draw();
-			};
-			treeReposition();
-		});
-		stage.addResizeCallback(function() {
-			treeReposition();
-		});
-	}
+			stage.add(self);
+			self.add(bg);
+		}
 
-return Desktop;
-},["Layer"]);
+
+
+	return Desktop;
+}, ["Layer"]);

@@ -133,7 +133,7 @@ define("Shape", function(self) {
         var bufferLayerContext = bufferLayer.getContext();
 
         bufferLayer.clear();
-        self._draw(bufferLayer);
+        self.draw(bufferLayer);
 
         var imageData = bufferLayerContext.getImageData(0, 0, w, h);
         self.data = imageData.data;
@@ -159,7 +159,7 @@ define("Shape", function(self) {
             var pathLayer = stage.pathLayer;
             var pathLayerContext = pathLayer.getContext();
 
-            self._draw(pathLayer);
+            self.draw(pathLayer);
 
             return pathLayerContext.isPointInPath(pos.x, pos.y);
         } else {
@@ -174,7 +174,7 @@ define("Shape", function(self) {
      * @param {Layer} layer Layer that the shape will be drawn on
      *******************************************************************************/
 
-    self._draw = function(layer) {
+    self.draw = function(layer) {
         if (layer !== undefined && self.drawFunc !== undefined) {
             var stage = layer.getStage();
             var context = layer.getContext();

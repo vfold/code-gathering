@@ -41,8 +41,8 @@ stage.init = function() {
         var width = window.innerWidth,
             height = window.innerHeight;
 
-        stageContainer.style.width = "" + width + "px";
-        stageContainer.style.height = "" + height + "px";
+        stage.container.style.width = "" + width + "px";
+        stage.container.style.height = "" + height + "px";
 
         stage.setSize(width, height);
 
@@ -618,7 +618,7 @@ stage.init = function() {
      *******************************************************************/
 
     stage.draw = function() {
-        drawChildren();
+        stage._drawChildren();
     };
 
     /*******************************************************************

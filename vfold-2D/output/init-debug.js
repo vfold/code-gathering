@@ -2,57 +2,64 @@
  /***************************************************** 
   * File path: pre-init.js 
   *****************************************************/ 
+/**********************************************
+ * Class definition
+ * Make these private and finish fixing it
+ **********************************************/
 
- /**********************************************
-  * Class definition
-  * Make these private and finish fixing it
-  **********************************************/
+(function() {
 
- (function() {
+  var queue = {},
+    pending = {};
 
-   var queue = {},
-     pending = {};
+  window.define = function(name, definition, parents) {
 
-   window.define = function(name, definition, parents) {
+    var queueName, pName, index;
 
-     self = {};
-     if(window.hasOwnProperty(name)){
+    self = {};
+    if (window.hasOwnProperty(name)) {
       return;
-     }
-     window[name] = definition(self);
+    }
+    window[name] = definition(self);
 
-     /**********************************************
-      * Helper function for extending Classes
-      **********************************************/
+    /**********************************************
+     * Extending Classes
+     **********************************************/
 
-     for (var index in parents) {
+    for (index in parents) {
+      pName = parents[index];
+      // Checking if the parent Class has been defined
+      if (!window.hasOwnProperty(pName)) {
+        // Add to the parent pending list which classes have to be extended
+        if (!pending.hasOwnProperty(pName)) {
+          pending[pName] = new Array();
+        }
+        pending[pName].push(name);
+        continue;
+      }
+      put(self, window[pName].prototype);
+    }
+    window[name].prototype = self;
 
-       var pName = parents[index],
-         parent = window[pName];
+    /********************************************************
+     * Load extending prototype to classes put in the queue
+     ********************************************************/
 
-       if (!parent) {
+    if (pending.hasOwnProperty(name)) {
 
-         queue[name] = {
-           definition: definition,
-           parents: parents
-         }
-         if (!pending[pName]) {
-           pending[pName] = new Array();
-         }
-         pending[pName].push(name);
+      for (index in pending[name]) {
 
-         return;
-       }
-       put(self, parent.prototype);
-     }
-
-     window[name].prototype = self;
-   }
- })();
+        put(window[pending[name][index]].prototype, self);
+      }
+      delete pending[name]
+    }
+  }
+})();
 // call super constructor
-  function parent(constructor,parameters){
-  constructor.apply(arguments.callee.prototype,parameters);
- }
+
+function parent(constructor, parameters) {
+  constructor.apply(arguments.callee.prototype, parameters);
+}
 
  /***************************************************** 
   * File path: src/vfold/core.js 
@@ -74,19 +81,21 @@ return Core;
  /***************************************************** 
   * File path: src/vfold/desktop.js 
   *****************************************************/ 
-define("Desktop",function(self){
+define("Desktop", function(self) {
 
-    var Desktop = function() {
+	var treeReposition = function() {},
+		tree, bg;
 
-		stage.add(this);
+	var Desktop = function() {
 
-		var treeReposition = function() {},
-			tree, bg = new Kinetic.Shape({
+		parent(Layer);
+
+			bg = new Shape({
 				drawFunc: function() {
 
 					var w = stage.getWidth(),
 						h = stage.getHeight(),
-						ctx = this.getContext(),
+						ctx = self.getContext(),
 						grd = ctx.createRadialGradient(w, h, 100, w, h, w);
 
 					grd.addColorStop(0, "#3a4e4e");
@@ -97,30 +106,33 @@ define("Desktop",function(self){
 				}
 			});
 
-		this.add(bg);
+			loadBitmap("tree.png", function(image) {
 
-		loadImage("tree.png", function(image) {
+				tree = image;
+				self.add(tree);
 
-			tree = image;
-			log("hey i did it!!");
-			this.add(tree);
+				treeReposition = function() {
+					put(tree.attrs, {
+						x: stage.width - 400,
+						y: stage.height - 400
+					});
+					self.draw();
+				};
+				treeReposition();
+			});
+			stage.addResizeCallback(function() {
+				treeReposition();
+			});
 
-			treeReposition = function() {
-				put(tree.attrs, {
-					x: stage.getWidth() - 400,
-					y: stage.getHeight() - 400
-				});
-				this.draw();
-			};
-			treeReposition();
-		});
-		stage.addResizeCallback(function() {
-			treeReposition();
-		});
-	}
+			stage.add(self);
+			self.add(bg);
+		}
 
-return Desktop;
-},["Layer"]);
+
+
+	return Desktop;
+}, ["Layer"]);
+
  /***************************************************** 
   * File path: src/vfold/display/bitmap.js 
   *****************************************************/ 
@@ -325,10 +337,10 @@ define("Container", function(self) {
         var children = self.children;
         for (var n = 0; n < children.length; n++) {
             var child = children[n];
-            if (child.nodeType === 'Shape' && child.isVisible() && stage.isVisible()) {
-                child._draw(child.getLayer());
+            if (child.nodeType === 'Shape' && child.visible && stage.visible) {
+                child.draw(child.getLayer());
             } else {
-                child._draw();
+                child.draw();
             }
         }
     };
@@ -340,7 +352,7 @@ define("Container", function(self) {
 
     self.add = function(child) {
 
-        child._id = engine.idCounter++;
+        child.id = engine.idCounter++;
         child.index = self.children.length;
         child.parent = this;
 
@@ -405,8 +417,8 @@ define("Container", function(self) {
         }
         cont = container || arguments.callee.prototype;
         return {
-            x: mousePos.x - cont.attrs.x,
-            y: mousePos.y - cont.attrs.y
+            x: mousePos.x - cont.x,
+            y: mousePos.y - cont.y
         }
     }
 
@@ -572,7 +584,7 @@ define("Layer",function(self){
 
     self.draw = function() {
         self.clear();
-        if (self.attrs.visible) {
+        if (self.visible) {
             self._drawChildren();
         }
     };
@@ -1538,7 +1550,7 @@ define("Shape", function(self) {
         var bufferLayerContext = bufferLayer.getContext();
 
         bufferLayer.clear();
-        self._draw(bufferLayer);
+        self.draw(bufferLayer);
 
         var imageData = bufferLayerContext.getImageData(0, 0, w, h);
         self.data = imageData.data;
@@ -1564,7 +1576,7 @@ define("Shape", function(self) {
             var pathLayer = stage.pathLayer;
             var pathLayerContext = pathLayer.getContext();
 
-            self._draw(pathLayer);
+            self.draw(pathLayer);
 
             return pathLayerContext.isPointInPath(pos.x, pos.y);
         } else {
@@ -1579,7 +1591,7 @@ define("Shape", function(self) {
      * @param {Layer} layer Layer that the shape will be drawn on
      *******************************************************************************/
 
-    self._draw = function(layer) {
+    self.draw = function(layer) {
         if (layer !== undefined && self.drawFunc !== undefined) {
             var stage = layer.getStage();
             var context = layer.getContext();
@@ -1749,8 +1761,8 @@ stage.init = function() {
         var width = window.innerWidth,
             height = window.innerHeight;
 
-        stageContainer.style.width = "" + width + "px";
-        stageContainer.style.height = "" + height + "px";
+        stage.container.style.width = "" + width + "px";
+        stage.container.style.height = "" + height + "px";
 
         stage.setSize(width, height);
 
@@ -2326,7 +2338,7 @@ stage.init = function() {
      *******************************************************************/
 
     stage.draw = function() {
-        drawChildren();
+        stage._drawChildren();
     };
 
     /*******************************************************************
@@ -3329,22 +3341,24 @@ Tweens = {
  /***************************************************** 
   * File path: src/vfold/launcher.js 
   *****************************************************/ 
-define("Shape", function(self) {
+define("Launcher", function(self) {
+
+	/**********************************************************************
+	 * Declaration
+	 **********************************************************************/
 
 	// Background shape for the launcher
-	var bg = new Shape({
-		drawFunc: function() {}
-	}),
-		// Launcher container
-		lCont = new Layer(),
-		// Dummy background for mouse movement
-		dummyBg = new Shape(drawing.rect),
-		//
-		apps,
-		//
-		appActive,
-		// Number of applications pinned to launcher
-		numApps = 5,
+	var bg,
+	// Launcher container
+	lCont,
+	// Dummy background for mouse movement
+	dummyBg,
+	//
+	apps,
+	//
+	appActive,
+	// Number of applications pinned to launcher
+	numApps = 5,
 		// Tab Normal Size
 		size = 50,
 		// Application Launcher width
@@ -3354,11 +3368,18 @@ define("Shape", function(self) {
 		// Tab zoomed size
 		zoomSize = 10;
 
+	/**********************************************************************
+	 * Constructor
+	 **********************************************************************/
+
 	var Launcher = function() {
+			bg = new Shape();
+			lCont = new Layer();
+			dummyBg = new Shape(drawing.rect);
 
-			stage.add(this);
+			stage.add(self);
 
-			put(dummyBg.attrs, {
+			put(dummyBg, {
 				width: lWidth,
 				height: size + zoomSize,
 				fill: "black",
@@ -3366,16 +3387,22 @@ define("Shape", function(self) {
 			});
 
 			stage.addResizeCallback(function() {
-				put(self.attrs, {
-					x: (stage.getWidth() - lWidth) >> 1
-				});
+				self.x = (stage.width - lWidth) >> 1;
 			});
 
 			dummyBg.on("mousemove", function() {
 
 				drawBg();
 			});
+
+			lCont.add(bg);
+			self.add(lCont);
+			self.add(dummyBg);
 		};
+
+	/**********************************************************************
+	 * Functions
+	 **********************************************************************/
 
 	var drawBg = function() {
 
@@ -3489,10 +3516,6 @@ define("Shape", function(self) {
 
 			drawPath(ctx, cmd, crds, pts);
 		};
-
-	lCont.add(bg);
-	self.add(lCont);
-	self.add(dummyBg);
 
 	return Launcher;
 }, ["Layer"]);

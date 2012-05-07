@@ -1,19 +1,21 @@
-define("Shape", function(self) {
+define("Launcher", function(self) {
+
+	/**********************************************************************
+	 * Declaration
+	 **********************************************************************/
 
 	// Background shape for the launcher
-	var bg = new Shape({
-		drawFunc: function() {}
-	}),
-		// Launcher container
-		lCont = new Layer(),
-		// Dummy background for mouse movement
-		dummyBg = new Shape(drawing.rect),
-		//
-		apps,
-		//
-		appActive,
-		// Number of applications pinned to launcher
-		numApps = 5,
+	var bg,
+	// Launcher container
+	lCont,
+	// Dummy background for mouse movement
+	dummyBg,
+	//
+	apps,
+	//
+	appActive,
+	// Number of applications pinned to launcher
+	numApps = 5,
 		// Tab Normal Size
 		size = 50,
 		// Application Launcher width
@@ -23,11 +25,18 @@ define("Shape", function(self) {
 		// Tab zoomed size
 		zoomSize = 10;
 
+	/**********************************************************************
+	 * Constructor
+	 **********************************************************************/
+
 	var Launcher = function() {
+			bg = new Shape();
+			lCont = new Layer();
+			dummyBg = new Shape(drawing.rect);
 
-			stage.add(this);
+			stage.add(self);
 
-			put(dummyBg.attrs, {
+			put(dummyBg, {
 				width: lWidth,
 				height: size + zoomSize,
 				fill: "black",
@@ -35,16 +44,22 @@ define("Shape", function(self) {
 			});
 
 			stage.addResizeCallback(function() {
-				put(self.attrs, {
-					x: (stage.getWidth() - lWidth) >> 1
-				});
+				self.x = (stage.width - lWidth) >> 1;
 			});
 
 			dummyBg.on("mousemove", function() {
 
 				drawBg();
 			});
+
+			lCont.add(bg);
+			self.add(lCont);
+			self.add(dummyBg);
 		};
+
+	/**********************************************************************
+	 * Functions
+	 **********************************************************************/
 
 	var drawBg = function() {
 
@@ -158,10 +173,6 @@ define("Shape", function(self) {
 
 			drawPath(ctx, cmd, crds, pts);
 		};
-
-	lCont.add(bg);
-	self.add(lCont);
-	self.add(dummyBg);
 
 	return Launcher;
 }, ["Layer"]);

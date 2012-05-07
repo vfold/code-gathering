@@ -28,7 +28,7 @@ define("Layer",function(self){
 
     self.draw = function() {
         self.clear();
-        if (self.attrs.visible) {
+        if (self.visible) {
             self._drawChildren();
         }
     };

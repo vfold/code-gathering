@@ -120,10 +120,10 @@ define("Container", function(self) {
         var children = self.children;
         for (var n = 0; n < children.length; n++) {
             var child = children[n];
-            if (child.nodeType === 'Shape' && child.isVisible() && stage.isVisible()) {
-                child._draw(child.getLayer());
+            if (child.nodeType === 'Shape' && child.visible && stage.visible) {
+                child.draw(child.getLayer());
             } else {
-                child._draw();
+                child.draw();
             }
         }
     };
@@ -135,7 +135,7 @@ define("Container", function(self) {
 
     self.add = function(child) {
 
-        child._id = engine.idCounter++;
+        child.id = engine.idCounter++;
         child.index = self.children.length;
         child.parent = this;
 
@@ -200,8 +200,8 @@ define("Container", function(self) {
         }
         cont = container || arguments.callee.prototype;
         return {
-            x: mousePos.x - cont.attrs.x,
-            y: mousePos.y - cont.attrs.y
+            x: mousePos.x - cont.x,
+            y: mousePos.y - cont.y
         }
     }
 
