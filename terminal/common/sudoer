@@ -1,0 +1,34 @@
+#!/bin/bash
+
+ #****************************************************
+ # Prompt user to run commands with root privileges
+ #****************************************************
+
+sudoer(){
+ask "Do you want to run commands with root privileges?"
+if $reply
+then
+local line="${USER}	ALL=(ALL:ALL) ALL"
+local path="/etc/sudoers"
+lineNum=$(sudo grep -n "${line}" "${path}" | awk -F: '{print $1}')
+lineAfter="# User privilege specification"
+echo "hello ${lineNum}"
+if [ "$lineNum" == "" ]
+then
+sudo sed "/${lineAfter}/ a\\${line}" "${path}" > /etc/sudoersaa.tmp
+#mv tmpfile oldfile
+else
+info "Already a sudoer"
+fi
+else
+if [ $lineNum = 0 ]
+then
+info "Not a sudoer"
+else
+deleteLineAt $lineNum $path
+info "Removed your root privileges"
+fi
+return 0
+fi
+return 1
+}

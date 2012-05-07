@@ -3,8 +3,21 @@
  # Start the constructor
  #*************************************************
 source ~/.cache/code-gathering/common/constructor
-depends package github
+scripts=(
+package
+github
+)
+include scripts[@]
 
+loadPackages() {
+
+info "Getting packages to install"
+local scripts=(
+packages
+)
+include scripts[@] -l
+installPackages packages[@] packageDebs[@] packageKeys[@]
+}
  #*************************************************
  # Install and configure github
  #*************************************************
@@ -51,7 +64,7 @@ titles=(
 "Exit"
 )
 callbacks=(
-installPackages
+loadPackages
 installGithub
 setupCodeGathering
 exitOptions

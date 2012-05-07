@@ -59,7 +59,7 @@ return $(grep -n "${1}" "${2}" | awk -F: '{print $1}')
 # ${2} File Path
 #***************************************************
 addLine(){
-echo ${1} >>${2}
+echo ${1} >> ${2}
 }
 #***************************************************
 # Delete line at its given index
@@ -122,7 +122,7 @@ pause
  ask(){
  	tput bold
  	tput setaf $green;
- 	echo -n "${1}"
+ 	echo -n "${1} [y/n]: "
  	read -s -n1 ans
  	tput setaf $norm;
  	tput sgr0
@@ -156,6 +156,40 @@ fi
  #****************************************************
  # Include scripts from an online repository
  #****************************************************
+
+#****************************************************
+ # Add to source when a script depends on another
+ # Resolves conflicts with the source command
+ #****************************************************
+
+declare -A included
+
+include(){
+
+declare -a scripts=("${!1}")
+local func=getCommon
+local fldr=common
+
+if [ "${2}" == "-l" ]
+then
+          func=getLocal
+		fldr=${projectName}
+fi
+
+for script in "${scripts[@]}"
+do 
+local path="${fldr}_${script}"
+if [ "${included[${path}]}" != "true" ]
+then
+included[${path}]=true
+$func ${script}
+source ${cache}/${fldr}/${script}
+else
+info "Source already included"
+fi
+done
+}
+
 getCommon(){
 get ${baseURL}/common/${1} ${cache}/common/${1}
 }
@@ -223,54 +257,6 @@ eval $command
 #-----------------------------------
 
 getOption
-}
-
- #****************************************************
- # Add to source when a script depends on another
- # Resolves conflicts with the source command
- #****************************************************
-
-dependencies=()
-depends(){
-for dependency in "$@"
-do 
-if [ -z ${dependencies[$dependency]} ]
-then
-dependencies[$dependency]=true
-getCommon ${dependency}
-source ${cache}/common/${dependency}
-fi
-done
-}
-
- #****************************************************
- # Prompt user to run commands with root privileges
- #****************************************************
-
-sudoer(){
-ask "Do you want to run commands with root privileges?"
-if $reply
-then
-local line='${USER} ALL=(ALL) NOPASSWD:ALL'
-local path="/etc/sudoers"
-local lineNum=$(findLine ${line} ${path})
-if [ $lineNum = 0 ]
-then
-sudo sh -c "echo ${line} >> ${path}"
-else
-info "Already a sudoer"
-fi
-else
-if [ $lineNum = 0 ]
-then
-info "Not a sudoer"
-else
-deleteLineAt $lineNum $path
-info "Removed your root privileges"
-fi
-return false
-fi
-return true
 }
 
 #*************************************************

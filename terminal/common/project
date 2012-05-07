@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#extended pattern matching bash
+shopt -s extglob
+
 baseURL="https://raw.github.com/rvaronos/code-gathering/master/terminal"
 sep="----------------------"
 iwd=${PWD}
@@ -10,21 +13,27 @@ iwd=${PWD}
 # and the constructor script
 #**********************************************************
 
+loadConstructor(){
 cd ~/.cache/
 mkdir -p code-gathering
 cd code-gathering
 mkdir -p common
 cd common
-
 if [ "${1}" == "--ncc" ] || $( ! [ -f constructor ] )
 then
 curl -# ${baseURL}/common/constructor > constructor
 else
 echo "Using cached file: constructor"
 fi
+}
+
+loadConstructor
 source constructor
 
-depends profile
+scripts=(
+profile
+)
+include scripts[@]
 
 loadProject(){
  
@@ -34,6 +43,7 @@ loadProject(){
 
 clearAllCache(){
 rm -rf ~/.cache/code-gathering/*
+loadConstructor
 echo "Cache cleared"
 getOption
 }

@@ -2,7 +2,7 @@
 
 setupGithub() {
 
-ask "Do you have a github account [y/n]?"
+ask "Do you have a github account?"
 
 if $reply
 then

@@ -6,43 +6,81 @@
 # ${2} DEB line
 #*************************************************
 
-addSource(){
+addDeb(){
 
+
+sudoFindLine(){
+result=$(sudo grep -n "${1}" "${2}" | awk -F: '{print $1}')
+}
 local sourcePath="/etc/apt/sources.list.d/${1}.list"
 local debLine="deb http://${2}"
 
+if ! [ -z  "${sourcePath}" ]
+then
+sudoFindLine "${debLine}" "${sourcePath}"
 # Search for an existing source line in text file
-if [ -f ${sourcePath} ] && [ $(findLine ${debLine} ${sourcePath}) != 0 ]
+if [ -f ${sourcePath} ] && [ "$result" != "" ]
 then
 	log "\"${sourcePath}\" already contains \"${debLine}\"" 
 	return
 fi
+fi
 
-addLine ${debLine} ${sourcePath}
-
+sudo bash -c "echo \"${debLine}\" >> ${sourcePath}"
 }
 
 #*************************************************
-# Install packages 
+# Check if package exists and install
+# ${1} Package name
 #*************************************************
-
-installPackages() {
-
-info "Getting packages to install"
-include packages -local
-
-for package in $packages
-do 
-echo $package
-done
 
 installPackage(){
 if which ${1} > /dev/null
 then
    echo "${1} package already exists"
 else
-      sudo apt-get install ${1}
+      sudo apt-get -y install ${1}
 fi
 }
+
+#*************************************************
+# Install packages 
+# 1. Packages
+# 2. Sources
+# 3. Keys
+#*************************************************
+
+installPackages() {
+
+declare -a packages=("${!1}")
+declare -a packageDebs=("${!2}")
+declare -a packageKeys=("${!3}")
+
+for deb in "${packageDebs[@]}"
+do 
+local index=$(indexOf "$deb" ";")
+addDeb "$(substrl "$deb" 0 $[$index-1])" "$(substr "$deb" $[$index+1])"
+done
+
+for key in "${packageKeys[@]}"
+do 
+wget -q -O - "${key}" | sudo apt-key add -
+done
+
+#---------------------------------------------
+# Fix the keys when added
+#---------------------------------------------
+
+for i in $(sudo aptitude update 2>&1 | grep NO_PUBKEY | awk '{print $NF;}')
+do
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys $i
+done
+
+sudo apt-get update
+
+for package in "${packages[@]}"
+do 
+installPackage "$package"
+done
 
 }
